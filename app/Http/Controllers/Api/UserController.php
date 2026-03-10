@@ -28,4 +28,15 @@ class UserController extends Controller
 
         return response()->json($request->user()->fresh());
     }
+
+    public function destroy(Request $request) {
+
+        $user = $request->user();
+        $user->tokens()->delete();
+        $user->delete();
+
+        return response()->json([
+            'message' => 'User deleted successfully'
+        ]);
+    }
 }

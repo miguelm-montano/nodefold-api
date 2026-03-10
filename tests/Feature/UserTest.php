@@ -44,4 +44,22 @@ class UserTest extends TestCase
                     'email' => 'new@test.com',
                 ]);
     }
+
+    public function test_authenticated_user_can_delete_their_profile(): void {
+
+        $user = User::factory()->create();
+
+        Passport::actingAs($user);
+
+        $response = $this->deleteJson('/api/user/me');
+
+        $response->assertStatus(200)
+                ->assertJsonFragment([
+                    'message' => 'User deleted successfully'
+                ]);
+        
+        $this->assertDatabaseMissing('users', [
+            'id' => $user->id
+        ]);
+    }
 }

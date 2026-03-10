@@ -26,4 +26,22 @@ class UserTest extends TestCase
                     'name' => $user->name,
                 ]);
     }
+
+    public function test_authenticated_user_can_update_their_profile(): void {
+
+        $user = User::factory()->create();
+
+        Passport::actingAs($user);
+
+        $response = $this->putJson('/api/user/me', [
+            'name' => 'Miguel Updated',
+            'email' => 'new@test.com',
+        ]);
+
+        $response->assertStatus(200)
+                ->assertJsonFragment([
+                    'name' => 'Miguel Updated',
+                    'email' => 'new@test.com',
+                ]);
+    }
 }

@@ -15,4 +15,5 @@ Route::middleware('auth:api')->group(function () {
 
 Route::middleware('auth:api')->group(function () {
     Route::get('/user/me', [UserController::class, 'me']);
+    Route::put('/user/me', [UserController::class, 'update']);
 });

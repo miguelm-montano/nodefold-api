@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 
@@ -43,6 +44,24 @@ class UserTest extends TestCase
                     'name' => 'Miguel Updated',
                     'email' => 'new@test.com',
                 ]);
+    }
+
+    public function test_authenticated_user_can_update_their_password(): void {
+
+        $user = User::factory()->create();
+
+        Passport::actingAs($user);
+
+        $response = $this->putJson('/api/user/me', [
+            'password' => 'newpassword123',
+            'password_confirmation' => 'newpassword123',
+        ]);
+
+        $response->assertStatus(200);
+
+        $this->assertTrue(
+            Hash::check('newpassword123', $user->fresh()->password)
+        );
     }
 
     public function test_authenticated_user_can_delete_their_profile(): void {

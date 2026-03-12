@@ -39,8 +39,9 @@ class FolderCreateTest extends TestCase
             'user_id' => $user->id
         ]);
 
-        $response = $this->postJson('api/folders/' . $folder->id . '/folders', [
-            'name' => 'Logos'
+        $response = $this->postJson('/api/folders', [
+            'name'      => 'Logos',
+            'parent_id' => $folder->id
         ]);
 
         $response->assertStatus(201)
@@ -67,8 +68,9 @@ class FolderCreateTest extends TestCase
             'parent_id' => $folder->id
         ]);
 
-        $response = $this->postJson('api/folders/' . $subfolder->id . '/folders', [
-            'name' => 'Photos'
+        $response = $this->postJson('/api/folders', [
+            'name'      => 'Photos',
+            'parent_id' => $subfolder->id
         ]);
 
         $response->assertStatus(403);
@@ -99,8 +101,10 @@ class FolderCreateTest extends TestCase
         ]);
 
         Passport::actingAs($otherUser);
-        $response = $this->postJson('/api/folders/' . $folder->id . '/folders', [
-            'name' => 'Explode'
+
+        $response = $this->postJson('/api/folders', [
+            'name'      => 'Explode',
+            'parent_id' => $folder->id
         ]);
 
         $response->assertStatus(404);

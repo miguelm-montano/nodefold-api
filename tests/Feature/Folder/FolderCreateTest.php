@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 
-class FolderTest extends TestCase
+class FolderCreateTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -104,7 +104,5 @@ class FolderTest extends TestCase
         ]);
 
         $response->assertStatus(404);
-
-
     }
 }

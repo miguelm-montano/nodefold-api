@@ -18,5 +18,6 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('/user/me', [UserController::class, 'destroy']);
 
     Route::post('/folders', [FolderController::class, 'store']);
+    Route::post('/folders/{id}/folders', [FolderController::class, 'storeSubfolder']);
 });
 

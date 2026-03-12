@@ -28,4 +28,27 @@ class FolderTest extends TestCase
 
         $this->assertDatabaseHas('folders', ['name' => 'Design']);
     }
+
+    public function test_authenticated_user_can_create_a_subfolder(): void {
+
+        $user = User::factory()->create();
+
+        Passport::ActingAs($user);
+
+        $folder = Folder::factory()->create([
+            'user_id' => $user->id
+        ]);
+
+        $response = $this->postJson('api/folders/' . $folder->id . '/folders', [
+            'name' => 'Logos'
+        ]);
+
+        $response->assertStatus(201)
+                ->assertJsonFragment(['name' => 'Logos']);
+
+        $this->assertDatabaseHas('folders', [
+            'name' => 'Logos',
+            'parent_id' => $folder->id
+        ]);
+    }
 }

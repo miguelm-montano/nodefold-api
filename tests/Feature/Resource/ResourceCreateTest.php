@@ -74,4 +74,33 @@ class ResourceCreateTest extends TestCase
             'folder_id' => $folder->id,
         ]);
     }
+
+    public function test_authenticated_user_can_upload_a_color_palette(): void {
+
+        $user = User::factory()->create();
+
+        Passport::actingAs($user);
+
+        $folder = Folder::factory()->create([
+            'user_id' => $user->id
+        ]);
+
+        $response = $this->postJson('/api/folders/' . $folder->id .'/resources/', [
+            'image' => null,
+            'url' => 'https://coolors.co/palette/dad7cd-a3b18a-588157-3a5a40-344e41',
+            'type' => 'color_palette',
+            'title' => 'Color test',
+            'description' => 'test',
+            'tags' => 'greens',
+        ]);
+
+        $response->assertStatus(201)
+                ->assertJsonFragment(['title' => 'Color test'])
+                ->assertJsonPath('color_data.0', 'dad7cd');
+
+        $this->assertDatabaseHas('resources', [
+            'title'  => 'Color test',
+            'folder_id' => $folder->id,
+        ]);
+    }
 }

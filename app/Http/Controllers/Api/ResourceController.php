@@ -6,6 +6,7 @@ use App\Models\Resource;
 use App\Models\Folder;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ResourceController extends Controller
 {
@@ -16,15 +17,19 @@ class ResourceController extends Controller
             ->firstOrFail();
 
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'type' => 'required|in:font,image,color_palette,icon,web',
+            'title'       => 'required|string|max:255',
+            'type'        => 'required|in:font,image,color_palette,icon,web',
             'description' => 'nullable|string|max:400',
-            'url' => 'nullable|string|max:500',
-            'tags' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp,gif|max:10240'
+            'url'         => [
+                Rule::requiredIf(fn() => in_array($request->type, ['font', 'web', 'icon', 'color_palette'])),
+                'nullable',
+                'string',
+                'max:500',
+            ],
+            'tags'        => 'nullable|string',
+            'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp,gif|max:10240'
         ]);
 
-        $imageFile = $validated['image'] ?? null;
         unset($validated['image']);
         unset($validated['tags']);
 
@@ -32,6 +37,7 @@ class ResourceController extends Controller
             ...$validated,
             'folder_id'  => $folder->id,
             'image_path' => $this->handleImageUpload($request),
+            'color_data' => $this->extractColorsFromUrl($validated['type'], $validated['url'] ?? null),
         ]);
 
         // $resource->syncTagsFromString($validated['tags'] ?? null);
@@ -44,6 +50,18 @@ class ResourceController extends Controller
         if ($request->hasFile('image')) {
             return $request->file('image')->store('resources',  'public');
         }
+        return null;
+    }
+
+    private function extractColorsFromUrl(?string $type, ?string $url): ?array {
+        
+        if ($type !== 'color_palette' || empty($url)) return null;
+
+        if (preg_match('/coolors\.co\/(?:palette\/)?([a-f0-9-]+)/i', $url, $matches)) {
+            $colors = array_filter(explode('-', $matches[1]), fn($c) => strlen($c) === 6);
+            return array_values($colors);
+        }
+
         return null;
     }
 }

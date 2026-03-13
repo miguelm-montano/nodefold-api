@@ -19,8 +19,6 @@ return new class extends Migration
             $table->enum('type', ['font', 'image', 'color_palette', 'icon', 'web']);
             $table->text('description')->nullable();
             $table->string('url')->nullable();
-            $table->string('file_path')->nullable();
-            $table->string('thumbnail')->nullable();
             $table->string('image_path')->nullable();
             $table->json('color_data')->nullable();
             $table->timestamps();

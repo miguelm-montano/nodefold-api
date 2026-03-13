@@ -20,6 +20,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/folders', [FolderController::class, 'store']);
     Route::get('/folders', [FolderController::class, 'index']);
     Route::get('/folders/{id}', [FolderController::class, 'show']);
+    Route::put('/folders/{id}', [FolderController::class, 'update']);
 
 });
 

@@ -56,4 +56,19 @@ class FolderController extends Controller
         return response()->json($folder);
 
     }
+
+    public function update(Request $request, $id) {
+
+        $folder = Folder::where('id', $id)
+            ->where('user_id', $request->user()->id)
+            ->firstOrFail();
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:50',
+        ]);
+
+        $folder->update($validated);
+
+        return response()->json($folder);
+    }
 }

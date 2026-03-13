@@ -8,8 +8,18 @@ use Illuminate\Http\Request;
 
 class FolderController extends Controller
 {
-    public function store(Request $request)
-    {
+    public function index(Request $request) {
+        
+        $folders = $request->user()->folders()
+            ->whereNull('parent_id')
+            ->with(['folders'])
+            ->get();
+
+        return response()->json($folders);
+    }
+
+    public function store(Request $request) {
+
         $validated = $request->validate([
             'name'      => 'required|string|max:50',
             'parent_id' => 'nullable|exists:folders,id',
@@ -31,5 +41,19 @@ class FolderController extends Controller
         ]);
 
         return response()->json($folder, 201);
+    }
+
+    public function show(Request $request, $id) {
+
+        $folder = Folder::where('id', $id)
+                ->where('user_id', $request->user()->id)
+                ->firstOrFail();
+        
+        if ($folder->parent_id === null) {
+            $folder->load('folders');
+        }
+
+        return response()->json($folder);
+
     }
 }

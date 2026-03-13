@@ -4,8 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\FolderController;
-
-
+use App\Http\Controllers\Api\ResourceController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -22,6 +21,8 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/folders/{id}', [FolderController::class, 'show']);
     Route::put('/folders/{id}', [FolderController::class, 'update']);
     Route::delete('folders/{id}', [FolderController::class, 'destroy']);
+
+    Route::post('/folders/{id}/resources', [ResourceController::class, 'store']);
 
 });
 

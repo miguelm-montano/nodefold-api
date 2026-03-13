@@ -71,4 +71,20 @@ class FolderController extends Controller
 
         return response()->json($folder);
     }
+
+    //Nota para mi: Falta agregar recursos cuando exista la tabla
+    public function destroy(Request $request, $id) {
+
+        $folder = Folder::where('id', $id)
+            ->where('user_id', $request->user()->id)
+            ->firstOrFail();
+
+        if ($folder->parent_id === null) {
+            $folder->folders()->delete();
+        }
+
+        $folder->delete();
+
+        return response()->json(['message' => 'Folder deleted']);
+    }
 }

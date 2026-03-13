@@ -24,13 +24,26 @@ class ResourceController extends Controller
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp,gif|max:10240'
         ]);
 
+        $imageFile = $validated['image'] ?? null;
+        unset($validated['image']);
+        unset($validated['tags']);
+
         $resource = $request->user()->resources()->create([
             ...$validated,
-            'folder_id' => $folder->id,
+            'folder_id'  => $folder->id,
+            'image_path' => $this->handleImageUpload($request),
         ]);
 
-        //$resource->syncTagsFromString($validated['tags'] ?? null);
+        // $resource->syncTagsFromString($validated['tags'] ?? null);
 
         return response()->json($resource, 201);
+    }
+
+    private function handleImageUpload(Request $request): ?string {
+        
+        if ($request->hasFile('image')) {
+            return $request->file('image')->store('resources',  'public');
+        }
+        return null;
     }
 }

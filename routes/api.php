@@ -27,5 +27,6 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/resources', [ResourceController::class, 'index']);
     Route::get('/resources/{id}', [ResourceController::class, 'show']);
     Route::put('/resources/{id}', [ResourceController::class, 'update']);
+    Route::delete('/resources/{id}', [ResourceController::class, 'destroy']);
 });
 

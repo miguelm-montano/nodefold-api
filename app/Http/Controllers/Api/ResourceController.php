@@ -20,6 +20,16 @@ class ResourceController extends Controller
         return response()->json($resources);
     }
 
+    public function show(Request $request, $id) {
+        
+        $resource = Resource::where('id', $id)
+            ->where('user_id', $request->user()->id)
+            ->with(['folder'])
+            ->firstOrFail();
+
+        return response()->json($resource);
+    }
+
     public function store(Request $request, $id) {
 
         $folder    = $this->findUserFolder($id, $request->user()->id);
@@ -35,6 +45,33 @@ class ResourceController extends Controller
         // $resource->syncTagsFromString($validated['tags'] ?? null);
 
         return response()->json($resource, 201);
+    }
+
+    public function update(Request $request, $id) {
+
+        $resource = Resource::where('id', $id)
+            ->where('user_id', $request->user()->id)
+            ->firstOrFail();
+
+        $validated = $this->validateResource($request);
+
+        unset($validated['image']);
+        unset($validated['tags']);
+
+        $resource->update($validated);
+
+        return response()->json($resource);
+    }
+
+    public function destroy(Request $request, $id) {
+
+        $resource = Resource::where('id', $id)
+            ->where('user_id', $request->user()->id)
+            ->firstOrFail();
+
+            $resource->delete();
+
+            return response()->json(['message' => 'Resource deleted']);
     }
 
     private function findUserFolder(int $id, int $userId): Folder {
@@ -79,32 +116,6 @@ class ResourceController extends Controller
             'tags' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp,gif|max:10240'
         ]);
-    }
-
-    public function show(Request $request, $id) {
-        
-        $resource = Resource::where('id', $id)
-            ->where('user_id', $request->user()->id)
-            ->with(['folder'])
-            ->firstOrFail();
-
-        return response()->json($resource);
-    }
-
-    public function update(Request $request, $id) {
-
-        $resource = Resource::where('id', $id)
-            ->where('user_id', $request->user()->id)
-            ->firstOrFail();
-
-        $validated = $this->validateResource($request);
-
-        unset($validated['image']);
-        unset($validated['tags']);
-
-        $resource->update($validated);
-
-        return response()->json($resource);
     }
 }
 

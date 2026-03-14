@@ -23,6 +23,8 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('folders/{id}', [FolderController::class, 'destroy']);
 
     Route::post('/folders/{id}/resources', [ResourceController::class, 'store']);
+    
+    Route::get('/resources', [ResourceController::class, 'index']);
 
 });
 

@@ -10,28 +10,20 @@ use Illuminate\Validation\Rule;
 
 class ResourceController extends Controller
 {
+
+    public function index(Request $request) {
+    
+        $resources = $request->user()->resources()
+            ->with(['folder'])
+            ->get();
+
+        return response()->json($resources);
+    }
+
     public function store(Request $request, $id) {
 
-        $folder = Folder::where('id', $id)
-            ->where('user_id', $request->user()->id)
-            ->firstOrFail();
-
-        $validated = $request->validate([
-            'title'       => 'required|string|max:255',
-            'type'        => 'required|in:font,image,color_palette,icon,web',
-            'description' => 'nullable|string|max:400',
-            'url'         => [
-                Rule::requiredIf(fn() => in_array($request->type, ['font', 'web', 'icon', 'color_palette'])),
-                'nullable',
-                'string',
-                'max:500',
-            ],
-            'tags'        => 'nullable|string',
-            'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp,gif|max:10240'
-        ]);
-
-        unset($validated['image']);
-        unset($validated['tags']);
+        $folder    = $this->findUserFolder($id, $request->user()->id);
+        $validated = $this->validateResource($request);
 
         $resource = $request->user()->resources()->create([
             ...$validated,
@@ -43,6 +35,13 @@ class ResourceController extends Controller
         // $resource->syncTagsFromString($validated['tags'] ?? null);
 
         return response()->json($resource, 201);
+    }
+
+    private function findUserFolder(int $id, int $userId): Folder {
+        
+        return Folder::where('id', $id)
+            ->where('user_id', $userId)
+            ->firstOrFail();
     }
 
     private function handleImageUpload(Request $request): ?string {
@@ -64,4 +63,22 @@ class ResourceController extends Controller
 
         return null;
     }
+
+    private function validateResource(Request $request): array {
+    
+        return $request->validate([
+            'title' => 'required|string|max:255',
+            'type' => 'required|in:font,image,color_palette,icon,web',
+            'description' => 'nullable|string|max:400',
+            'url' => [
+                Rule::requiredIf(fn() => in_array($request->type, ['font', 'web', 'icon', 'color_palette'])),
+                'nullable',
+                'string',
+                'max:500',
+                ],
+            'tags' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp,gif|max:10240'
+        ]);
+    }
 }
+

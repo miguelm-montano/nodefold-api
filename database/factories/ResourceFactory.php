@@ -23,8 +23,6 @@ class ResourceFactory extends Factory
             'type'      => fake()->randomElement(['font', 'image',  'color_palette', 'icon', 'web']),
             'description' => fake()->sentence(),
             'url'       => fake()->url(),
-            'file_path' => null,
-            'thumbnail' => null,
             'image_path' => null,
             'color_data' => null,
         ];

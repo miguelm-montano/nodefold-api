@@ -80,5 +80,15 @@ class ResourceController extends Controller
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp,gif|max:10240'
         ]);
     }
+
+    public function show(Request $request, $id) {
+        
+        $resource = Resource::where('id', $id)
+            ->where('user_id', $request->user()->id)
+            ->with(['folder'])
+            ->firstOrFail();
+
+        return response()->json($resource);
+    }
 }
 

@@ -42,4 +42,29 @@ class ResourceReadTest extends TestCase
         $response->assertStatus(200)
                 ->assertJsonFragment(['title' => 'Waves']);
     }
+
+    public function test_authenticated_user_can_see_an_specific_resource(): void {
+
+        $user = User::factory()->create();
+
+        Passport::actingAs($user);
+
+        $folder = Folder::factory()->create([
+            'user_id' => $user->id
+        ]);
+
+        $resource = Resource::factory()->create([
+            'user_id' => $user->id,
+            'folder_id' => $folder->id,
+            'url' => 'https://example.com/image.jpg',
+            'type' => 'image',
+            'title' => 'Waves',
+            'description' => 'Natural photography',
+        ]);
+
+        $response = $this->getJson('api/resources/' . $resource->id);
+
+        $response->assertStatus(200)
+                ->assertJsonFragment(['title' => 'Waves']);
+    }
 }

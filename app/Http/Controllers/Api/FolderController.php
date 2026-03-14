@@ -12,7 +12,8 @@ class FolderController extends Controller
         
         $folders = $request->user()->folders()
             ->whereNull('parent_id')
-            ->with(['folders'])
+            ->with(['folders.resources', 'resources'])
+            ->withCount(['resources'])
             ->get();
 
         return response()->json($folders);
@@ -50,7 +51,9 @@ class FolderController extends Controller
                 ->firstOrFail();
         
         if ($folder->parent_id === null) {
-            $folder->load('folders');
+            $folder->load(['folders.resources', 'resources']);
+        } else {
+            $folder->load(['resources']);
         }
 
         return response()->json($folder);

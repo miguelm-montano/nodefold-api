@@ -90,5 +90,21 @@ class ResourceController extends Controller
 
         return response()->json($resource);
     }
+
+    public function update(Request $request, $id) {
+
+        $resource = Resource::where('id', $id)
+            ->where('user_id', $request->user()->id)
+            ->firstOrFail();
+
+        $validated = $this->validateResource($request);
+
+        unset($validated['image']);
+        unset($validated['tags']);
+
+        $resource->update($validated);
+
+        return response()->json($resource);
+    }
 }
 

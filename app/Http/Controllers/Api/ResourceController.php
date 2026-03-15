@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Resource;
 use App\Models\Folder;
+use App\Models\Tag;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -13,11 +14,21 @@ class ResourceController extends Controller
 
     public function index(Request $request) {
     
-        $resources = $request->user()->resources()
-            ->with(['folder'])
-            ->get();
+        $query = $request->user()->resources()->with(['folder']);
 
-        return response()->json($resources);
+       /* if($request->query('tagged') === 'true') {
+            $query->has('tags');
+        }
+
+        if($request->query('tagged') === 'false') {
+            $query->doesntHave('tags');
+        } */
+
+        if ($request->query('search')) {
+            $query->where('title', 'like', '%' . $request->query('search') . '%');
+        }
+
+        return response()->json($query->get());
     }
 
     public function show(Request $request, $id) {

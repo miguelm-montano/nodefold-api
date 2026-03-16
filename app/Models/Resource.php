@@ -16,8 +16,6 @@ class Resource extends Model {
         'type',
         'description',
         'url',
-        'file_path',
-        'thumbnail',
         'image_path',
         'color_data'
     ];

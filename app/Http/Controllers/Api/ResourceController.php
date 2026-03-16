@@ -53,7 +53,7 @@ class ResourceController extends Controller
             'color_data' => $this->extractColorsFromUrl($validated['type'], $validated['url'] ?? null),
         ]);
 
-        // $resource->syncTagsFromString($validated['tags'] ?? null);
+        $resource->syncTagsFromString($validated['tags'] ?? null, $request->user()->id);
 
         return response()->json($resource, 201);
     }
@@ -68,6 +68,8 @@ class ResourceController extends Controller
 
         unset($validated['image']);
         unset($validated['tags']);
+
+        $resource->syncTagsFromString($validated['tags'] ?? null, $request->user()->id);
 
         $resource->update($validated);
 

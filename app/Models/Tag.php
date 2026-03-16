@@ -11,6 +11,8 @@ class Tag extends Model
 
     protected $fillable = ['user_id', 'name'];
 
+    protected $hidden = ['user_id', 'created_at', 'updated_at', 'pivot'];
+
     public function resources()
     {
         return $this->belongsToMany(Resource::class, 'resource_tag');

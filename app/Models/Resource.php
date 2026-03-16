@@ -24,6 +24,8 @@ class Resource extends Model {
         'color_data' => 'array',
     ];
 
+    protected $hidden = ['user_id', 'folder_id'];
+
     public function user() {
         
         return $this->belongsTo(User::class);

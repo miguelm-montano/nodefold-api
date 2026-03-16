@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Folder;
+use App\Models\Resource;
+use App\Models\Tag;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -22,7 +24,7 @@ class FolderController extends Controller
     public function store(Request $request) {
 
         $validated = $request->validate([
-            'name'      => 'required|string|max:50',
+            'name' => 'required|string|max:50',
             'parent_id' => 'nullable|exists:folders,id',
         ]);
 
@@ -37,7 +39,7 @@ class FolderController extends Controller
         }
 
         $folder = $request->user()->folders()->create([
-            'name'      => $validated['name'],
+            'name' => $validated['name'],
             'parent_id' => $validated['parent_id'] ?? null,
         ]);
 
@@ -75,19 +77,25 @@ class FolderController extends Controller
         return response()->json($folder);
     }
 
-    //Nota para mi: Falta agregar recursos cuando exista la tabla
     public function destroy(Request $request, $id) {
 
         $folder = Folder::where('id', $id)
-            ->where('user_id', $request->user()->id)
-            ->firstOrFail();
+        ->where('user_id', $request->user()->id)
+        ->firstOrFail();
 
         if ($folder->parent_id === null) {
+            $subfolderIds = $folder->folders()->pluck('id');
+            Resource::whereIn('folder_id', $subfolderIds)->delete();
             $folder->folders()->delete();
         }
 
+        $folder->resources()->delete();
         $folder->delete();
 
+        Tag::where('user_id', $request->user()->id)
+            ->whereDoesntHave('resources')
+            ->delete();
+
         return response()->json(['message' => 'Folder deleted']);
-    }
+    }  
 }

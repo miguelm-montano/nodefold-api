@@ -67,32 +67,7 @@ class ResourceReadTest extends TestCase
         $response->assertStatus(200)
                 ->assertJsonFragment(['title' => 'Waves']);
     }
-
-    /*public function test_authenticated_user_can_filter_resources_by_untagged(): void {
-
-        $user = User::factory()->create();
-
-        Passport::actingAs($user);
-
-        $folder = Folder::factory()->create([
-            'user_id' => $user->id
-        ]);
-
-        $untaggedResource = Resource::factory()->create([
-            'user_id' => $user->id,
-            'folder_id' => $folder->id,
-            'title' => 'Untagged Resource',
-            'type' => 'image',
-            'url' => 'https://example.com/image.jpg',
-        ]);
-
-        $response = $this->getJson('api/resources?tagged=false');
-
-        $response->assertStatus(200)
-                ->assertJsonFragment(['title' => 'Untagged Resource']);
-        
-    }*/
-
+    
     public function test_autheticated_user_can_search_a_resource_by_name(): void {
 
         $user = User::factory()->create();

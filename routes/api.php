@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\FolderController;
 use App\Http\Controllers\Api\ResourceController;
+use App\Http\Controllers\Api\TagController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -20,7 +21,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/folders', [FolderController::class, 'index']);
     Route::get('/folders/{id}', [FolderController::class, 'show']);
     Route::put('/folders/{id}', [FolderController::class, 'update']);
-    Route::delete('folders/{id}', [FolderController::class, 'destroy']);
+    Route::delete('/folders/{id}', [FolderController::class, 'destroy']);
 
     Route::post('/folders/{id}/resources', [ResourceController::class, 'store']);
 
@@ -28,5 +29,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/resources/{id}', [ResourceController::class, 'show']);
     Route::put('/resources/{id}', [ResourceController::class, 'update']);
     Route::delete('/resources/{id}', [ResourceController::class, 'destroy']);
+
+    Route::get('tags', [TagController::class, 'index']);
 });
 

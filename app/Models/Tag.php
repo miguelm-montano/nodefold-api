@@ -1,0 +1,20 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Tag extends Model
+{
+    use HasFactory;
+
+    protected $fillable = ['user_id', 'name'];
+
+    protected $hidden = ['user_id', 'created_at', 'updated_at', 'pivot'];
+
+    public function resources()
+    {
+        return $this->belongsToMany(Resource::class, 'resource_tag');
+    }
+}

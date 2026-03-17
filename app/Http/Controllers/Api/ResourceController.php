@@ -16,26 +16,17 @@ class ResourceController extends Controller
     
         $query = $request->user()->resources()->with(['folder']);
 
-       /* if($request->query('tagged') === 'true') {
-            $query->has('tags');
-        }
-
-        if($request->query('tagged') === 'false') {
-            $query->doesntHave('tags');
-        } */
-
-        if ($request->query('search')) {
-            $query->where('title', 'like', '%' . $request->query('search') . '%');
-        }
-
+        $this->applyFilters($query, $request);
+        
         return response()->json($query->get());
+
     }
 
     public function show(Request $request, $id) {
         
         $resource = Resource::where('id', $id)
             ->where('user_id', $request->user()->id)
-            ->with(['folder'])
+            ->with(['folder', 'tags'])
             ->firstOrFail();
 
         return response()->json($resource);
@@ -53,9 +44,9 @@ class ResourceController extends Controller
             'color_data' => $this->extractColorsFromUrl($validated['type'], $validated['url'] ?? null),
         ]);
 
-        // $resource->syncTagsFromString($validated['tags'] ?? null);
+        $resource->syncTagsFromString($validated['tags'] ?? null, $request->user()->id);
 
-        return response()->json($resource, 201);
+        return response()->json($resource->load('tags', 'folder'), 201);
     }
 
     public function update(Request $request, $id) {
@@ -66,12 +57,18 @@ class ResourceController extends Controller
 
         $validated = $this->validateResource($request);
 
-        unset($validated['image']);
-        unset($validated['tags']);
+        $tags = $validated['tags'] ?? null;
+        unset($validated['image'], $validated['tags']);
 
+        $resource->syncTagsFromString($tags, $request->user()->id);
+
+        Tag::where('user_id', $request->user()->id)
+            ->whereDoesntHave('resources')
+            ->delete();
+        
         $resource->update($validated);
 
-        return response()->json($resource);
+        return response()->json($resource->fresh()->load('tags', 'folder'));
     }
 
     public function destroy(Request $request, $id) {
@@ -80,9 +77,15 @@ class ResourceController extends Controller
             ->where('user_id', $request->user()->id)
             ->firstOrFail();
 
-            $resource->delete();
+        $userId = $resource->user_id;
 
-            return response()->json(['message' => 'Resource deleted']);
+        $resource->delete();
+
+        Tag::where('user_id', $userId)
+            ->whereDoesntHave('resources')
+            ->delete();
+
+        return response()->json(['message' => 'Resource deleted']);
     }
 
     private function findUserFolder(int $id, int $userId): Folder {
@@ -121,12 +124,33 @@ class ResourceController extends Controller
             'url' => [
                 Rule::requiredIf(fn() => in_array($request->type, ['font', 'web', 'icon', 'color_palette'])),
                 'nullable',
-                'string',
+                'url',
                 'max:500',
                 ],
             'tags' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp,gif|max:10240'
         ]);
+    }
+
+    private function applyFilters($query, Request $request): void {
+    
+        if ($request->query('tagged') === 'true') {
+            $query->has('tags');
+        }
+
+        if ($request->query('tagged') === 'false') {
+            $query->doesntHave('tags');
+        }
+
+        if ($request->query('search')) {
+            $query->where('title', 'like', '%' . $request->query('search') . '%');
+        }
+
+        if ($request->query('tag')) {
+            $query->whereHas('tags', function($q) use ($request) {
+                $q->where('name', $request->query('tag'));
+            });
+        }
     }
 }
 

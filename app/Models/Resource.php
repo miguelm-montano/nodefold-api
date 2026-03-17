@@ -16,8 +16,6 @@ class Resource extends Model {
         'type',
         'description',
         'url',
-        'file_path',
-        'thumbnail',
         'image_path',
         'color_data'
     ];
@@ -25,6 +23,8 @@ class Resource extends Model {
     protected $casts = [
         'color_data' => 'array',
     ];
+
+    protected $hidden = ['user_id', 'folder_id'];
 
     public function user() {
         
@@ -41,16 +41,17 @@ class Resource extends Model {
         return $this->belongsToMany(Tag::class, 'resource_tag');
     }
 
-    public function syncTagsFromString(?string $tagsString): void {
+    public function syncTagsFromString(?string $tagsString, int $userId): void {
         
         $tagNames = collect(explode(',', $tagsString ?? ''))
             ->map(fn ($tag) => trim(strtolower($tag)))
             ->filter()
             ->unique();
 
-        $tagIds = $tagNames->map(fn ($name) =>
-            \App\Models\Tag::firstOrCreate(['name' => $name])->id
-        );
+        $tagIds = $tagNames->map(function($name) use ($userId) {
+            return Tag::firstOrCreate(['name' => $name, 'user_id' => $userId],
+            )->id;
+    });
 
         $this->tags()->sync($tagIds);
     }

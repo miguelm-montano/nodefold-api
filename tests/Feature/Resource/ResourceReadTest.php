@@ -37,7 +37,7 @@ class ResourceReadTest extends TestCase
             'description' => 'Natural photography',
         ]);
 
-        $response = $this->getJson('api/resources');
+        $response = $this->getJson('api/v1/resources');
 
         $response->assertStatus(200)
                 ->assertJsonFragment(['title' => 'Waves']);
@@ -62,7 +62,7 @@ class ResourceReadTest extends TestCase
             'description' => 'Natural photography',
         ]);
 
-        $response = $this->getJson('api/resources/' . $resource->id);
+        $response = $this->getJson('api/v1/resources/' . $resource->id);
 
         $response->assertStatus(200)
                 ->assertJsonFragment(['title' => 'Waves']);
@@ -94,7 +94,7 @@ class ResourceReadTest extends TestCase
             'url' => 'https://example.com/image.jpg',
         ]);
 
-        $response = $this->getJson('api/resources?search=Resource Name');
+        $response = $this->getJson('api/v1/resources?search=Resource Name');
 
         $response->assertStatus(200)
                 ->assertJsonFragment(['title' => 'Resource Name'])

@@ -29,7 +29,7 @@ class FolderReadTest extends TestCase
             'parent_id' => $folder->id
         ]);
 
-        $response = $this->getJson('api/folders');
+        $response = $this->getJson('api/v1/folders');
 
         $response->assertStatus(200)
                 ->assertJsonFragment(['name' => $folder->name])
@@ -51,7 +51,7 @@ class FolderReadTest extends TestCase
             'parent_id' => $folder->id
         ]);
 
-        $response = $this->getJson('api/folders/' . $folder->id);
+        $response = $this->getJson('api/v1/folders/' . $folder->id);
 
         $response->assertStatus(200)
                 ->assertJsonFragment(['name' => $folder->name])

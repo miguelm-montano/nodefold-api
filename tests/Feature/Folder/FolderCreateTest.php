@@ -19,7 +19,7 @@ class FolderCreateTest extends TestCase
 
         Passport::actingAs($user);
 
-        $response = $this->postJson('/api/folders', [
+        $response = $this->postJson('/api/v1/folders', [
         'name' => 'Design'
     ]);
 
@@ -39,7 +39,7 @@ class FolderCreateTest extends TestCase
             'user_id' => $user->id
         ]);
 
-        $response = $this->postJson('/api/folders', [
+        $response = $this->postJson('/api/v1/folders', [
             'name'      => 'Logos',
             'parent_id' => $folder->id
         ]);
@@ -68,7 +68,7 @@ class FolderCreateTest extends TestCase
             'parent_id' => $folder->id
         ]);
 
-        $response = $this->postJson('/api/folders', [
+        $response = $this->postJson('/api/v1/folders', [
             'name'      => 'Photos',
             'parent_id' => $subfolder->id
         ]);
@@ -82,7 +82,7 @@ class FolderCreateTest extends TestCase
 
         Passport::actingAs($user);
 
-        $response = $this->postJson('/api/folders', [
+        $response = $this->postJson('/api/v1/folders', [
             'name' => null
         ]);
 
@@ -102,7 +102,7 @@ class FolderCreateTest extends TestCase
 
         Passport::actingAs($otherUser);
 
-        $response = $this->postJson('/api/folders', [
+        $response = $this->postJson('/api/v1/folders', [
             'name'      => 'Explode',
             'parent_id' => $folder->id
         ]);

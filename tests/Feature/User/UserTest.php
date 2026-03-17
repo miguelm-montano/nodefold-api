@@ -19,7 +19,7 @@ class UserTest extends TestCase
 
         Passport::actingAs($user);
 
-        $response = $this->getJson('/api/user/me');
+        $response = $this->getJson('/api/v1/user/me');
 
         $response->assertStatus(200)
                 ->assertJsonFragment([
@@ -34,7 +34,7 @@ class UserTest extends TestCase
 
         Passport::actingAs($user);
 
-        $response = $this->putJson('/api/user/me', [
+        $response = $this->putJson('/api/v1/user/me', [
             'name' => 'Miguel Updated',
             'email' => 'new@test.com',
         ]);
@@ -52,7 +52,7 @@ class UserTest extends TestCase
 
         Passport::actingAs($user);
 
-        $response = $this->putJson('/api/user/me', [
+        $response = $this->putJson('/api/v1/user/me', [
             'password' => 'newpassword123',
             'password_confirmation' => 'newpassword123',
         ]);
@@ -70,7 +70,7 @@ class UserTest extends TestCase
 
         Passport::actingAs($user);
 
-        $response = $this->deleteJson('/api/user/me');
+        $response = $this->deleteJson('/api/v1/user/me');
 
         $response->assertStatus(200)
                 ->assertJsonFragment([

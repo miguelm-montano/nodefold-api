@@ -27,7 +27,7 @@ class ResourceCreateTest extends TestCase
             'user_id' => $user->id 
         ]);
 
-        $response = $this->postJson('/api/folders/' . $folder->id .'/resources/', [
+        $response = $this->postJson('/api/v1/folders/' . $folder->id .'/resources/', [
             'url' => 'https://example.com/image.jpg',
             'type' => 'image',
             'title' => 'Waves',
@@ -57,7 +57,7 @@ class ResourceCreateTest extends TestCase
 
         $image = UploadedFile::fake()->image('waves.jpg');
 
-        $response = $this->postJson('/api/folders/' . $folder->id .'/resources/', [
+        $response = $this->postJson('/api/v1/folders/' . $folder->id .'/resources/', [
             'image' => $image,
             'url' => null,
             'type' => 'image',
@@ -85,7 +85,7 @@ class ResourceCreateTest extends TestCase
             'user_id' => $user->id
         ]);
 
-        $response = $this->postJson('/api/folders/' . $folder->id .'/resources/', [
+        $response = $this->postJson('/api/v1/folders/' . $folder->id .'/resources/', [
             'image' => null,
             'url' => 'https://coolors.co/palette/dad7cd-a3b18a-588157-3a5a40-344e41',
             'type' => 'color_palette',

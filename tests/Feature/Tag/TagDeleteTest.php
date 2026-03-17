@@ -37,7 +37,7 @@ class TagDeleteTest extends TestCase
 
         $resource->tags()->attach($tag->id);
 
-        $this->deleteJson('api/resources/' . $resource->id);
+        $this->deleteJson('api/v1/resources/' . $resource->id);
 
         $this->assertDatabaseMissing('tags', ['id' => $tag->id]);
     }
@@ -76,7 +76,7 @@ class TagDeleteTest extends TestCase
         $resource1->tags()->attach($tag->id);
         $resource2->tags()->attach($tag->id);
 
-        $this->deleteJson('api/resources/' . $resource1->id);
+        $this->deleteJson('api/v1/resources/' . $resource1->id);
 
         $this->assertDatabaseHas('tags', ['id' => $tag->id]);
     }

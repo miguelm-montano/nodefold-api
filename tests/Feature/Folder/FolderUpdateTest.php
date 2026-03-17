@@ -24,7 +24,7 @@ class FolderUpdateTest extends TestCase
             'user_id' => $user->id
         ]);
 
-        $response = $this->putJson('api/folders/' . $folder->id, ['name' => 'New name']);
+        $response = $this->putJson('api/v1/folders/' . $folder->id, ['name' => 'New name']);
 
         $response->assertStatus(200)
                 ->assertJsonFragment(['name' => 'New name']);

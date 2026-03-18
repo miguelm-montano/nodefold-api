@@ -30,8 +30,8 @@ class AuthTest extends TestCase
         $response = $this->postJson('/api/v1/register', [
             'name' => 'Test',
             'email' => 'test@test.com',
-            'password' => 'password123',
-            'password_confirmation' => 'password123'
+            'password' => 'Password123',
+            'password_confirmation' => 'Password123'
         ]);
 
         $response->assertStatus(201)
@@ -54,8 +54,8 @@ class AuthTest extends TestCase
         $response = $this->postJson('/api/v1/register', [
             'name' => 'Test',
             'email' => 'test@test.com',
-            'password' => 'password123',
-            'password_confirmation' => 'password123'
+            'password' => 'Password123',
+            'password_confirmation' => 'Password123'
         ]);
 
         $response->assertStatus(422);
@@ -64,12 +64,12 @@ class AuthTest extends TestCase
     public function test_user_can_login(): void {
 
         $user = User::factory()->create([
-            'password' => Hash::make('password123')
+            'password' => Hash::make('Password123')
         ]);
 
         $response = $this->postJson('/api/v1/login', [
             'email' => $user->email,
-            'password' => 'password123'
+            'password' => 'Password123'
         ]);
 
         $response->assertStatus(200)
@@ -82,7 +82,7 @@ class AuthTest extends TestCase
     public function test_user_cannot_login_with_invalid_credentials(): void {
 
         $user = User::factory()->create([
-            'password' => Hash::make('password123'),
+            'password' => Hash::make('Password123'),
         ]);
 
         $response = $this->postJson('/api/v1/login', [

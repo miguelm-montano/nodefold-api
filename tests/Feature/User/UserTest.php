@@ -53,14 +53,14 @@ class UserTest extends TestCase
         Passport::actingAs($user);
 
         $response = $this->putJson('/api/v1/user/me', [
-            'password' => 'newpassword123',
-            'password_confirmation' => 'newpassword123',
+            'password' => 'Newpassword123',
+            'password_confirmation' => 'Newpassword123',
         ]);
 
         $response->assertStatus(200);
 
         $this->assertTrue(
-            Hash::check('newpassword123', $user->fresh()->password)
+            Hash::check('Newpassword123', $user->fresh()->password)
         );
     }
 

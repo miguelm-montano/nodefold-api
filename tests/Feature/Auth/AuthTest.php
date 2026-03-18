@@ -105,4 +105,25 @@ class AuthTest extends TestCase
         $response->assertStatus(200)
                 ->assertJsonFragment(['message' => 'Logged out successfully']);
     }
+
+    public function test_login_is_rate_limited_after_too_many_attempts(): void {
+
+        $user = User::factory()->create([
+            'password' => Hash::make('Password123')
+        ]);
+
+        for ($i = 0; $i < 5; $i++) {
+            $this->postJson('/api/v1/login', [
+                'email'    => $user->email,
+                'password' => 'wrongpassword',
+            ]);
+        }
+
+        $response = $this->postJson('/api/v1/login', [
+            'email'    => $user->email,
+            'password' => 'wrongpassword',
+        ]);
+
+        $response->assertStatus(429);
+    }
 }

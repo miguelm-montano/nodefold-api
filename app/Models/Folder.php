@@ -13,6 +13,8 @@ class Folder extends Model
 
     protected $hidden = ['user_id', 'created_at', 'updated_at'];
 
+    protected $appends = ['total_resources_count'];
+
     public function user() {
         return $this->belongsTo(User::class);
     }
@@ -27,5 +29,15 @@ class Folder extends Model
 
     public function resources() {
         return $this->hasMany(Resource::class);
+    }
+
+    public function getTotalResourcesCountAttribute(): int {
+    
+        if ($this->parent_id !== null) {
+            return $this->resources()->count();
+        }
+    
+        return $this->resources()->count() 
+            + $this->folders->sum(fn($sub) => $sub->resources()->count());
     }
 }

@@ -36,7 +36,7 @@ class ResourceDeleteTest extends TestCase
             'description' => 'Natural photography',
         ]);
 
-        $response = $this->deleteJson('api/resources/' . $resource->id);
+        $response = $this->deleteJson('api/v1/resources/' . $resource->id);
 
         $response->assertStatus(200)
                 ->assertJsonFragment([

@@ -25,7 +25,7 @@ class FolderDeleteTest extends TestCase
             'user_id' => $user->id
         ]);
 
-        $response = $this->deleteJson('api/folders/' . $folder->id);
+        $response = $this->deleteJson('api/v1/folders/' . $folder->id);
 
         $response->assertStatus(200)
                 ->assertJsonFragment([
@@ -52,7 +52,7 @@ class FolderDeleteTest extends TestCase
             'parent_id' => $folder->id
         ]);
 
-        $this->deleteJson('api/folders/' . $folder->id);
+        $this->deleteJson('api/v1/folders/' . $folder->id);
 
         $this->assertDatabaseMissing(
             'folders', ['id' => $subfolder->id
@@ -83,7 +83,7 @@ class FolderDeleteTest extends TestCase
             'folder_id' => $subfolder->id,
         ]);
 
-        $this->deleteJson('api/folders/' . $folder->id);
+        $this->deleteJson('api/v1/folders/' . $folder->id);
 
         $this->assertDatabaseMissing('resources', ['id' => $resourceInFolder->id]);
         $this->assertDatabaseMissing('resources', ['id' => $resourceInSubfolder->id]);

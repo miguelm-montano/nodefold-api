@@ -36,7 +36,7 @@ class ResourceUpdateTest extends TestCase
             'description' => 'Natural photography',
         ]);
 
-        $response = $this->putJson('api/resources/' . $resource->id, [
+        $response = $this->putJson('api/v1/resources/' . $resource->id, [
             'title'       => 'Updated Waves',
             'type'        => 'image',
             'url'         => 'https://example.com/image.jpg',

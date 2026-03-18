@@ -29,7 +29,7 @@ class TagReadTest extends TestCase
             'user_id' => $user->id
         ]);
 
-        $response = $this->getJson('/api/tags');
+        $response = $this->getJson('/api/v1/tags');
 
         $response->assertStatus(200)
              ->assertJsonFragment(['name' => 'Test']);
@@ -53,7 +53,7 @@ class TagReadTest extends TestCase
             'url' => 'https://example.com/image.jpg',
         ]);
 
-        $response = $this->getJson('api/resources?tagged=false');
+        $response = $this->getJson('api/v1/resources?tagged=false');
 
         $response->assertStatus(200)
                 ->assertJsonFragment(['title' => 'Untagged Resource']);
@@ -85,7 +85,7 @@ class TagReadTest extends TestCase
 
         $taggedResource->tags()->attach($tag->id);
 
-        $response = $this->getJson('/api/resources?tagged=true');
+        $response = $this->getJson('/api/v1/resources?tagged=true');
 
         $response->assertStatus(200)
                 ->assertJsonFragment(['title' => 'Tagged Resource']);
@@ -116,7 +116,7 @@ class TagReadTest extends TestCase
 
         $resource->tags()->attach($tag->id);
 
-        $response = $this->getJson('api/resources/' . $resource->id);
+        $response = $this->getJson('api/v1/resources/' . $resource->id);
 
         $response->assertStatus(200)
             ->assertJsonFragment(['name' => 'ocean']);
@@ -155,7 +155,7 @@ class TagReadTest extends TestCase
             'url'       => 'https://example.com/image.jpg',
         ]);
 
-        $response = $this->getJson('/api/resources?tag=Test');
+        $response = $this->getJson('/api/v1/resources?tag=Test');
 
         $response->assertStatus(200)
                 ->assertJsonFragment(['title' => 'Tagged Resource'])
@@ -178,7 +178,7 @@ class TagReadTest extends TestCase
             'title'     => 'Waves',
         ]);
 
-        $response = $this->putJson('api/resources/' . $resource->id, [
+        $response = $this->putJson('api/v1/resources/' . $resource->id, [
             'title' => 'Waves',
             'type'  => 'image',
             'url'   => 'https://example.com/image.jpg',

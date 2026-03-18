@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\v1\UserController;
 use App\Http\Controllers\Api\v1\FolderController;
 use App\Http\Controllers\Api\v1\ResourceController;
 use App\Http\Controllers\Api\v1\TagController;
+use App\Http\Controllers\Api\v1\AdminController;
 
 Route::prefix('v1')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
@@ -33,4 +34,8 @@ Route::prefix('v1')->group(function () {
 
         Route::get('tags', [TagController::class, 'index']);
     });
+
+        Route::middleware(['auth:api', 'isAdmin'])->group(function () {
+        Route::get('/admin/users', [AdminController::class, 'index']);
+    }); 
 });

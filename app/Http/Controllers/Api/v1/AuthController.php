@@ -9,8 +9,24 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 
+/**
+ * @group Auth
+ * Endpoints for user registration, login and logout.
+ * Registration and login do not require authentication.
+ */
 class AuthController extends Controller
 {
+    /**
+    * Register a new user
+    *
+    * Creates a new user account and returns an access token.
+    *
+    * @unauthenticated
+    * @bodyParam name string required The user's full name. Example: TestName
+    * @bodyParam email string required A valid unique email address. Example: testUser@nodefold.com
+    * @bodyParam password string required Min 8, max 15 characters. Must include uppercase and a number. Example: Password123
+    * @bodyParam password_confirmation string required Must match the password field. Example: Password123
+    */
     public function register(Request $request) {
 
         $validated = $request->validate([
@@ -39,6 +55,15 @@ class AuthController extends Controller
         ], 201);
     }
 
+    /**
+    * Login
+    *
+    * Authenticates the user and returns an access token.
+    *
+    * @unauthenticated
+    * @bodyParam email string required The registered email address. Example: miguel@nodefold.com
+    * @bodyParam password string required The account password. Example: Password123
+    */
     public function login(Request $request) {
 
         $credentials = $request->validate([
@@ -61,6 +86,11 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+    * Logout
+    * 
+    * Invalidates the current access token.
+    */
     public function logout(Request $request) {
 
         $request->user()->token()->revoke();

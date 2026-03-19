@@ -9,9 +9,25 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
+/**
+ * @group Resources
+ *
+ * Endpoints for managing user resources.
+ * Resources can be images, fonts, color palettes, icons or web links.
+ * All endpoints require authentication.
+ */
 class ResourceController extends Controller
 {
-
+    /**
+     * List all resources
+     *
+     * Returns all resources belonging to the authenticated user.
+     * Supports filtering via query parameters.
+     *
+     * @queryParam search string Filter resources by title. Example: Chair
+     * @queryParam Filter by tag status. Accepted values: true, false. Example: true
+     * @queryParam tag string Filter by tag name. Example: modern
+     */
     public function index(Request $request) {
     
         $query = $request->user()->resources()->with(['folder']);
@@ -22,6 +38,11 @@ class ResourceController extends Controller
 
     }
 
+    /**
+     * Get a resource
+     *
+     * Returns a single resource with its folder and tags.
+     */
     public function show(Request $request, $id) {
         
         $resource = Resource::where('id', $id)
@@ -32,6 +53,18 @@ class ResourceController extends Controller
         return response()->json($resource);
     }
 
+    /**
+    * Create a resource
+    *
+    * Creates a new resource inside the specified folder.
+    *
+    * @bodyParam title string required The title of the resource. Example: Green Tones
+    * @bodyParam type string required The type of resource.<br> Allowed: font, image, color_palette, icon, web. Example: color_palette
+    * @bodyParam description string optional A short description. Max 400 characters. Example: Green tones for the home page
+    * @bodyParam url string optional URL required for font, web, icon and color_palette types. Example: https://coolors.co/palette/dad7cd-a3b18a-588157-3a5a40-344e41
+    * @bodyParam tags string optional Comma separated list of tags. Example: greens, forest
+    * @bodyParam image file optional Image file. Accepted: jpg, jpeg, png, webp, gif. Max 10MB.
+     */
     public function store(Request $request, $id) {
 
         $folder = $this->findUserFolder($id, $request->user()->id);
@@ -49,6 +82,17 @@ class ResourceController extends Controller
         return response()->json($resource->load('tags', 'folder'), 201);
     }
 
+    /**
+     * Update a resource
+     *
+     * Updates the information of an existing resource.
+     *
+     * @bodyParam title string required The updated title. Example: Updated Green Tones
+     * @bodyParam type string required The resource type. Example: color_palette
+     * @bodyParam description string optional The updated description. Example: Updated description
+     * @bodyParam url string optional The updated URL. Example: https://coolors.co/palette/dad7cd-a3b18a-588157-3a5a40-344e41
+     * @bodyParam tags string optional Updated comma separated tags. Example: greens, updated
+     */
     public function update(Request $request, $id) {
 
         $resource = Resource::where('id', $id)
@@ -71,6 +115,11 @@ class ResourceController extends Controller
         return response()->json($resource->fresh()->load('tags', 'folder'));
     }
 
+    /**
+     * Delete a resource
+     *
+     * Deletes the resource and cleans up any orphan tags.
+     */
     public function destroy(Request $request, $id) {
 
         $resource = Resource::where('id', $id)

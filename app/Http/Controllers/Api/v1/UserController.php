@@ -7,13 +7,35 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use  Illuminate\Validation\Rules\Password;
 
+/**
+ * @group Users
+ *
+ * Endpoints for managing the authenticated user's profile.
+ * All endpoints require authentication.
+ */
 class UserController extends Controller
 {
+    /**
+    * Get profile
+    *
+    * Returns the authenticated user's profile information.
+    */
     public function me(Request $request) {
 
         return response()->json($request->user());
     }
 
+    /**
+    * Update profile
+    *
+    * Updates the authenticated user's profile information.
+    * All fields are optional — only send the fields you want to update.
+    *
+    * @bodyParam name string The user's name. Example: TestName
+    * @bodyParam email string A valid unique email address. Example: test@nodefold.com
+    * @bodyParam password string Min 8, max 15 characters. Must include uppercase and a number. Example: NewPass123
+    * @bodyParam password_confirmation string Required if password is provided. Example: NewPass123
+    */
     public function update(Request $request) {
 
         $validated = $request->validate([
@@ -36,6 +58,11 @@ class UserController extends Controller
         return response()->json($request->user()->fresh());
     }
 
+    /**
+    * Delete account
+    *
+    * Permanently deletes the authenticated user's account and all associated data.
+    */
     public function destroy(Request $request) {
 
         $user = $request->user();

@@ -8,10 +8,21 @@ use App\Models\Tag;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+/**
+ * @group Folders
+ * 
+ * Endpoints for managing folders and subfolders.
+ * Folders can have one level of nesting — a folder can contain subfolders, but subfolders cannot contain further subfolders.
+ */
 class FolderController extends Controller
 {
+    /**
+     * List all folders
+     * 
+     * Returns all root folders belonging to the authenticated user, including their subfolders and resources.
+     */
     public function index(Request $request) {
-        
+
         $folders = $request->user()->folders()
             ->whereNull('parent_id')
             ->with(['folders.resources', 'resources'])
@@ -20,6 +31,14 @@ class FolderController extends Controller
         return response()->json($folders);
     }
 
+    /**
+    * Create a folder
+    * 
+    * Creates a new folder. To create a subfolder, include a `parent_id` in the request body.
+    * 
+    * @bodyParam name string required The name of the folder. Max 50 characters. Example: Design
+    * @bodyParam parent_id integer optional The ID of the parent folder. Example: 1
+    */
     public function store(Request $request) {
 
         $validated = $request->validate([
@@ -45,6 +64,11 @@ class FolderController extends Controller
         return response()->json($folder, 201);
     }
 
+    /**
+     * Get a folder
+     * 
+     * Returns a single folder with its subfolders and resources.
+     */
     public function show(Request $request, $id) {
 
         $folder = Folder::where('id', $id)
@@ -61,6 +85,13 @@ class FolderController extends Controller
 
     }
 
+    /**
+     * Update a folder
+     * 
+     * Updates the name of a folder.
+     * 
+     * @bodyParam name string required The new name of the folder. Max 50 characters. Example: New Design
+     */
     public function update(Request $request, $id) {
 
         $folder = Folder::where('id', $id)
@@ -76,6 +107,11 @@ class FolderController extends Controller
         return response()->json($folder);
     }
 
+    /**
+     * Delete a folder
+     * 
+     * Deletes a folder and all its subfolders, resources and orphan tags.
+     */
     public function destroy(Request $request, $id) {
 
         $folder = Folder::where('id', $id)

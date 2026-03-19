@@ -1,0 +1,179 @@
+name: Users
+description: |-
+
+  Endpoints for managing the authenticated user's profile.
+  All endpoints require authentication.
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/user/me
+    metadata:
+      custom: []
+      groupName: Users
+      groupDescription: |-
+
+        Endpoints for managing the authenticated user's profile.
+        All endpoints require authentication.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get profile'
+      description: "Returns the authenticated user's profile information."
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated"}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PUT
+    uri: api/v1/user/me
+    metadata:
+      custom: []
+      groupName: Users
+      groupDescription: |-
+
+        Endpoints for managing the authenticated user's profile.
+        All endpoints require authentication.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Update profile'
+      description: |-
+        Updates the authenticated user's profile information.
+        All fields are optional — only send the fields you want to update.
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        custom: []
+        name: name
+        description: "The user's name."
+        required: false
+        example: TestName
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      email:
+        custom: []
+        name: email
+        description: 'A valid unique email address.'
+        required: false
+        example: test@nodefold.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      password:
+        custom: []
+        name: password
+        description: 'Min 8, max 15 characters. Must include uppercase and a number.'
+        required: false
+        example: NewPass123
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      password_confirmation:
+        custom: []
+        name: password_confirmation
+        description: 'Required if password is provided.'
+        required: false
+        example: NewPass123
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      name: TestName
+      email: test@nodefold.com
+      password: NewPass123
+      password_confirmation: NewPass123
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: api/v1/user/me
+    metadata:
+      custom: []
+      groupName: Users
+      groupDescription: |-
+
+        Endpoints for managing the authenticated user's profile.
+        All endpoints require authentication.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Delete account'
+      description: "Permanently deletes the authenticated user's account and all associated data."
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null

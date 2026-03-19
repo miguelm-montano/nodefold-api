@@ -15,7 +15,6 @@ class FolderController extends Controller
         $folders = $request->user()->folders()
             ->whereNull('parent_id')
             ->with(['folders.resources', 'resources'])
-            ->withCount(['resources'])
             ->get();
 
         return response()->json($folders);

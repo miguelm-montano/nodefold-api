@@ -103,4 +103,21 @@ class ResourceCreateTest extends TestCase
             'folder_id' => $folder->id,
         ]);
     }
+
+    public function test_authenticated_user_can_add_a_resource_with_image_url(): void {
+
+        $user = User::factory()->create();
+        Passport::actingAs($user);
+
+        $folder = Folder::factory()->create(['user_id' => $user->id]);
+
+        $response = $this->postJson('/api/v1/folders/' . $folder->id . '/resources', [
+            'url' => 'https://example.com/image.jpg',
+            'type' => 'image',
+            'title' => 'External Image',
+        ]);
+
+        $response->assertStatus(201)
+            ->assertJsonFragment(['title' => 'External Image']);
+    }
 }

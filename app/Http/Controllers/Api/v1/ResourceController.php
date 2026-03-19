@@ -34,12 +34,12 @@ class ResourceController extends Controller
 
     public function store(Request $request, $id) {
 
-        $folder    = $this->findUserFolder($id, $request->user()->id);
+        $folder = $this->findUserFolder($id, $request->user()->id);
         $validated = $this->validateResource($request);
 
         $resource = $request->user()->resources()->create([
             ...$validated,
-            'folder_id'  => $folder->id,
+            'folder_id' => $folder->id,
             'image_path' => $this->handleImageUpload($request),
             'color_data' => $this->extractColorsFromUrl($validated['type'], $validated['url'] ?? null),
         ]);
@@ -124,9 +124,13 @@ class ResourceController extends Controller
             'url' => [
                 Rule::requiredIf(fn() => in_array($request->type, ['font', 'web', 'icon', 'color_palette'])),
                 'nullable',
-                'url',
+                'string',
                 'max:500',
-                ],
+                Rule::when(
+                    $request->type === 'image' && $request->url,
+                    ['regex:/\.(jpg|jpeg|png|webp|gif)(\?.*)?$/i']
+                ),
+            ],
             'tags' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp,gif|max:10240'
         ]);

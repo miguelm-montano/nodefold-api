@@ -21,6 +21,14 @@ class TagController extends Controller
     *
     * Returns all tags belonging to the authenticated user.
     * Useful for autocomplete when tagging resources.
+    *
+    * @response 200 [{
+    *   "id": 1,
+    *   "name": "ocean"
+    * }]
+    * @response 401 {
+    *   "message": "Unauthenticated"
+    * }
     */
     public function index(Request $request) {
         

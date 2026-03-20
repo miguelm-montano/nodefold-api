@@ -23,6 +23,19 @@ class AdminController extends Controller
     * Returns all registered users. Supports filtering by role.
     *
     * @queryParam role string Filter users by role. Accepted values: user, admin. Example: user
+    *
+    * @response 200 [{
+    *   "id": 1,
+    *   "name": "TestUser",
+    *   "email": "usertest@nodefold.com",
+    *   "role": "user"
+    * }]
+    * @response 401 {
+    *   "message": "Unauthenticated"
+    * }
+    * @response 403 {
+    *   "message": "Unauthorized"
+    * }
     */
     public function index() {
         $users = User::all();
@@ -33,6 +46,19 @@ class AdminController extends Controller
     * Delete a user
     *
     * Permanently deletes a user account and all associated data including folders, resources and tags.
+    *
+    * @response 200 {
+    *   "message": "User deleted successfully"
+    * }
+    * @response 401 {
+    *   "message": "Unauthenticated"
+    * }
+    * @response 403 {
+    *   "message": "Unauthorized"
+    * }
+     @response 404 {
+    *   "message": "Resource not found"
+    * }
     */
     public function destroy($id) {
         $user = User::findOrFail($id);
@@ -46,6 +72,20 @@ class AdminController extends Controller
     * Platform stats
     *
     * Returns global platform statistics including total counts of users, resources, folders and tags.
+    *
+    * @response 200 {
+    *   "total_users": 25,
+    *   "total_resources": 142,
+    *   "total_folders": 38,
+    *   "total_tags": 15,
+    *   "tags": [{"id": 1, "name": "ocean"}]
+    * }
+    * @response 401 {
+    *   "message": "Unauthenticated"
+    * }
+    * @response 403 {
+    *   "message": "Unauthorized"
+    * }
     */
     public function stats() {
         return response()->json([

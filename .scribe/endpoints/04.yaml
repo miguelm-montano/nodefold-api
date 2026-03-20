@@ -42,13 +42,23 @@ endpoints:
     responses:
       -
         custom: []
+        status: 200
+        content: |-
+          [{
+            "id": 1,
+            "name": "ocean"
+          }]
+        headers: []
+        description: ''
+      -
+        custom: []
         status: 401
-        content: '{"message":"Unauthenticated"}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
+        content: |-
+          {
+            "message": "Unauthenticated"
+          }
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers

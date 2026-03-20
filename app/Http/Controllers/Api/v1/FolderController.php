@@ -17,10 +17,22 @@ use Illuminate\Http\Request;
 class FolderController extends Controller
 {
     /**
-     * List all folders
-     * 
-     * Returns all root folders belonging to the authenticated user, including their subfolders and resources.
-     */
+    * List all folders
+    * 
+    * Returns all root folders belonging to the authenticated user, including their subfolders and resources.
+    * 
+    * @response 200 [{
+    *   "id": 1,
+    *   "name": "Design",
+    *   "parent_id": null,
+    *   "total_resources_count": 3,
+    *   "folders": [],
+    *   "resources": []
+    * }]
+    * @response 401 {
+    *   "message": "Unauthenticated"
+    * }
+    */
     public function index(Request $request) {
 
         $folders = $request->user()->folders()
@@ -38,6 +50,24 @@ class FolderController extends Controller
     * 
     * @bodyParam name string required The name of the folder. Max 50 characters. Example: Design
     * @bodyParam parent_id integer optional The ID of the parent folder. Example: 1
+    *
+    * @response 201 {
+    *   "id": 1,
+    *   "name": "Design",
+    *   "parent_id": null
+    * }
+    * @response 401 {
+    *   "message": "Unauthenticated"
+    * }
+    * @response 403 {
+    *   "message": "Only one nesting level allowed"
+    * }
+    * @response 422 {
+    *   "message": "The name field is required.",
+       "errors": {
+    *     "name": ["The name field is required."]
+    *   }
+    * }
     */
     public function store(Request $request) {
 
@@ -65,9 +95,24 @@ class FolderController extends Controller
     }
 
     /**
-     * Get a folder
-     * 
-     * Returns a single folder with its subfolders and resources.
+    * Get a folder
+    * 
+    * Returns a single folder with its subfolders and resources.
+    *
+    * @response 200 {
+    *   "id": 1,
+    *   "name": "Design",
+    *   "parent_id": null,
+    *   "total_resources_count": 3,
+    *   "folders": [],
+    *   "resources": []
+    * }
+    * @response 401 {
+    *   "message": "Unauthenticated"
+    * }
+    * @response 404 {
+    *   "message": "Resource not found"
+    * }
      */
     public function show(Request $request, $id) {
 
@@ -86,11 +131,23 @@ class FolderController extends Controller
     }
 
     /**
-     * Update a folder
-     * 
-     * Updates the name of a folder.
-     * 
-     * @bodyParam name string required The new name of the folder. Max 50 characters. Example: New Design
+    * Update a folder
+    * 
+    * Updates the name of a folder.
+    * 
+    * @bodyParam name string required The new name of the folder. Max 50 characters. Example: New Design
+    *
+    * @response 200 {
+    *   "id": 1,
+    *   "name": "New Design",
+    *   "parent_id": null
+    * }
+    * @response 401 {
+    *   "message": "Unauthenticated"
+    * }
+    * @response 404 {
+    *   "message": "Resource not found"
+    * }
      */
     public function update(Request $request, $id) {
 
@@ -108,10 +165,20 @@ class FolderController extends Controller
     }
 
     /**
-     * Delete a folder
-     * 
-     * Deletes a folder and all its subfolders, resources and orphan tags.
-     */
+    * Delete a folder
+    * 
+    * Deletes a folder and all its subfolders, resources and orphan tags.
+    *
+    * @response 200 {
+    *   "message": "Folder deleted"
+    * }
+    * @response 401 {
+    *   "message": "Unauthenticated"
+    * }
+    * @response 404 {
+    *   "message": "Resource not found"
+    * }
+    */
     public function destroy(Request $request, $id) {
 
         $folder = Folder::where('id', $id)

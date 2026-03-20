@@ -78,7 +78,34 @@ endpoints:
       password: Password123
       password_confirmation: Password123
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 201
+        content: |-
+          {
+            "user": {
+              "id": 1,
+              "name": "TestName",
+              "email": "testUser@nodefold.com",
+              "role": "user"
+            },
+            "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9..."
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: |-
+          {
+            "message": "The email has already been taken.",
+            "errors": {
+              "email": ["The email has already been taken."]
+            }
+          }
+        headers: []
+        description: ''
     responseFields: []
     auth: []
     controller: null
@@ -135,7 +162,43 @@ endpoints:
       email: miguel@nodefold.com
       password: Password123
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "user": {
+              "id": 1,
+              "name": "TestName",
+              "email": "testUser@nodefold.com",
+              "role": "user"
+            },
+            "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9..."
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 401
+        content: |-
+          {
+            "message": "Invalid credentials"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: |-
+          {
+            "message": "The email field is required.",
+            "errors": {
+              "email": ["The email field is required."]
+            }
+          }
+        headers: []
+        description: ''
     responseFields: []
     auth: []
     controller: null
@@ -169,7 +232,25 @@ endpoints:
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "Logged out successfully"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated"
+          }
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers

@@ -48,13 +48,34 @@ endpoints:
     responses:
       -
         custom: []
+        status: 200
+        content: |-
+          [{
+            "id": 1,
+            "name": "TestUser",
+            "email": "usertest@nodefold.com",
+            "role": "user"
+          }]
+        headers: []
+        description: ''
+      -
+        custom: []
         status: 401
-        content: '{"message":"Unauthenticated"}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
+        content: |-
+          {
+            "message": "Unauthenticated"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 403
+        content: |-
+          {
+            "message": "Unauthorized"
+          }
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -104,7 +125,43 @@ endpoints:
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "User deleted successfully"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 403
+        content: |-
+          {
+            "message": "Unauthorized"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "Resource not found"
+          }
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -145,13 +202,35 @@ endpoints:
     responses:
       -
         custom: []
+        status: 200
+        content: |-
+          {
+            "total_users": 25,
+            "total_resources": 142,
+            "total_folders": 38,
+            "total_tags": 15,
+            "tags": [{"id": 1, "name": "ocean"}]
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
         status: 401
-        content: '{"message":"Unauthenticated"}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
+        content: |-
+          {
+            "message": "Unauthenticated"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 403
+        content: |-
+          {
+            "message": "Unauthorized"
+          }
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers

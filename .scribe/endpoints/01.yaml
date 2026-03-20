@@ -36,13 +36,25 @@ endpoints:
     responses:
       -
         custom: []
+        status: 200
+        content: |-
+          {
+            "id": 1,
+            "name": "TestName",
+            "email": "testUser@nodefold.com",
+            "role": "user"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
         status: 401
-        content: '{"message":"Unauthenticated"}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
+        content: |-
+          {
+            "message": "Unauthenticated"
+          }
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -130,7 +142,40 @@ endpoints:
       password: NewPass123
       password_confirmation: NewPass123
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "id": 1,
+            "name": "Name Updated",
+            "email": "testUser@nodefold.com",
+            "role": "user"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: |-
+          {
+            "message": "The email has already been taken.",
+            "errors": {
+              "email": ["The email has already been taken."]
+            }
+          }
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -168,7 +213,25 @@ endpoints:
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "User deleted successfully"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated"
+          }
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers

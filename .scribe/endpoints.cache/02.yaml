@@ -59,7 +59,48 @@ endpoints:
       name: Design
       parent_id: 1
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 201
+        content: |-
+          {
+            "id": 1,
+            "name": "Design",
+            "parent_id": null
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 403
+        content: |-
+          {
+            "message": "Only one nesting level allowed"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: |-
+          {
+            "message": "The name field is required.",
+          "errors": {
+              "name": ["The name field is required."]
+            }
+          }
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -100,13 +141,27 @@ endpoints:
     responses:
       -
         custom: []
+        status: 200
+        content: |-
+          [{
+            "id": 1,
+            "name": "Design",
+            "parent_id": null,
+            "total_resources_count": 3,
+            "folders": [],
+            "resources": []
+          }]
+        headers: []
+        description: ''
+      -
+        custom: []
         status: 401
-        content: '{"message":"Unauthenticated"}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
+        content: |-
+          {
+            "message": "Unauthenticated"
+          }
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -159,13 +214,36 @@ endpoints:
     responses:
       -
         custom: []
+        status: 200
+        content: |-
+          {
+            "id": 1,
+            "name": "Design",
+            "parent_id": null,
+            "total_resources_count": 3,
+            "folders": [],
+            "resources": []
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
         status: 401
-        content: '{"message":"Unauthenticated"}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
+        content: |-
+          {
+            "message": "Unauthenticated"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "Resource not found"
+          }
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -227,7 +305,36 @@ endpoints:
     cleanBodyParameters:
       name: 'New Design'
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "id": 1,
+            "name": "New Design",
+            "parent_id": null
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "Resource not found"
+          }
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -277,7 +384,34 @@ endpoints:
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "Folder deleted"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "Resource not found"
+          }
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers

@@ -26,6 +26,22 @@ class AuthController extends Controller
     * @bodyParam email string required A valid unique email address. Example: testUser@nodefold.com
     * @bodyParam password string required Min 8, max 15 characters. Must include uppercase and a number. Example: Password123
     * @bodyParam password_confirmation string required Must match the password field. Example: Password123
+    *
+    * @response 201 {
+    *   "user": {
+    *     "id": 1,
+    *     "name": "TestName",
+    *     "email": "testUser@nodefold.com",
+    *     "role": "user"
+    *   },
+    *   "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9..."
+    * }
+    * @response 422 {
+    *   "message": "The email has already been taken.",
+    *   "errors": {
+    *     "email": ["The email has already been taken."]
+    *   }
+    * }
     */
     public function register(Request $request) {
 
@@ -63,6 +79,25 @@ class AuthController extends Controller
     * @unauthenticated
     * @bodyParam email string required The registered email address. Example: miguel@nodefold.com
     * @bodyParam password string required The account password. Example: Password123
+    *
+    * @response 200 {
+    *   "user": {
+    *     "id": 1,
+    *     "name": "TestName",
+    *     "email": "testUser@nodefold.com",
+    *     "role": "user"
+    *   },
+    *   "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9..."
+    * }
+    * @response 401 {
+    *   "message": "Invalid credentials"
+    * }
+    * @response 422 {
+    *   "message": "The email field is required.",
+    *   "errors": {
+    *     "email": ["The email field is required."]
+    *   }
+    * }
     */
     public function login(Request $request) {
 
@@ -90,6 +125,13 @@ class AuthController extends Controller
     * Logout
     * 
     * Invalidates the current access token.
+    *
+    * @response 200 {
+    *   "message": "Logged out successfully"
+    * }
+    * @response 401 {
+    *   "message": "Unauthenticated"
+    * }
     */
     public function logout(Request $request) {
 

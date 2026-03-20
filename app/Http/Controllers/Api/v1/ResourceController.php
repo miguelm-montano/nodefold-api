@@ -19,15 +19,30 @@ use Illuminate\Validation\Rule;
 class ResourceController extends Controller
 {
     /**
-     * List all resources
-     *
-     * Returns all resources belonging to the authenticated user.
-     * Supports filtering via query parameters.
-     *
-     * @queryParam search string Filter resources by title. Example: Chair
-     * @queryParam Filter by tag status. Accepted values: true, false. Example: true
-     * @queryParam tag string Filter by tag name. Example: modern
-     */
+    * List all resources
+    *
+    * Returns all resources belonging to the authenticated user.
+    * Supports filtering via query parameters.
+    *
+    * @queryParam search string Filter resources by title. Example: Chair
+    * @queryParam Filter by tag status. Accepted values: true, false. Example: true
+    * @queryParam tag string Filter by tag name. Example: modern
+    *
+    * @response 200 [{
+    *   "id": 1,
+    *   "title": "Waves Photo",
+    *   "type": "image",
+    *   "description": "Natural photography",
+    *   "url": "https://example.com/image.jpg",
+    *   "image_path": null,
+    *   "color_data": null,
+    *   "tags": [{"id": 1, "name": "ocean"}],
+    *   "folder": {"id": 1, "name": "Design"}
+    * }]
+    * @response 401 {
+    *   "message": "Unauthenticated"
+    * }
+    */
     public function index(Request $request) {
     
         $query = $request->user()->resources()->with(['folder']);
@@ -39,10 +54,28 @@ class ResourceController extends Controller
     }
 
     /**
-     * Get a resource
-     *
-     * Returns a single resource with its folder and tags.
-     */
+    * Get a resource
+    *
+    * Returns a single resource with its folder and tags.
+    *
+    * @response 200 {
+    *   "id": 1,
+    *   "title": "Waves Photo",
+    *   "type": "image",
+    *   "description": "Natural photography",
+    *   "url": "https://example.com/image.jpg",
+    *   "image_path": null,
+    *   "color_data": null,
+    *   "tags": [{"id": 1, "name": "ocean"}],
+    *   "folder": {"id": 1, "name": "Design"}
+    * }
+    * @response 401 {
+    *   "message": "Unauthenticated"
+    * }
+    * @response 404 {
+    *   "message": "Resource not found"
+    * }
+    */
     public function show(Request $request, $id) {
         
         $resource = Resource::where('id', $id)
@@ -64,7 +97,31 @@ class ResourceController extends Controller
     * @bodyParam url string optional URL required for font, web, icon and color_palette types. Example: https://coolors.co/palette/dad7cd-a3b18a-588157-3a5a40-344e41
     * @bodyParam tags string optional Comma separated list of tags. Example: greens, forest
     * @bodyParam image file optional Image file. Accepted: jpg, jpeg, png, webp, gif. Max 10MB.
-     */
+    *
+    * @response 201 {
+    *   "id": 1,
+    *   "title": "Waves Photo",
+    *   "type": "image",
+    *   "description": "Natural photography",
+    *   "url": "https://example.com/image.jpg",
+    *   "image_path": null,
+    *   "color_data": null,
+    *   "tags": [{"id": 1, "name": "ocean"}],
+    *   "folder": {"id": 1, "name": "Design"}
+    * }
+    * @response 401 {
+    *   "message": "Unauthenticated"
+    * }
+    * @response 404 {
+    *   "message": "Resource not found"
+    * }
+    * @response 422 {
+    *   "message": "The title field is required.",
+    *   "errors": {
+    *     "title": ["The title field is required."]
+    *   }
+    * }
+    */
     public function store(Request $request, $id) {
 
         $folder = $this->findUserFolder($id, $request->user()->id);
@@ -83,16 +140,34 @@ class ResourceController extends Controller
     }
 
     /**
-     * Update a resource
-     *
-     * Updates the information of an existing resource.
-     *
-     * @bodyParam title string required The updated title. Example: Updated Green Tones
-     * @bodyParam type string required The resource type. Example: color_palette
-     * @bodyParam description string optional The updated description. Example: Updated description
-     * @bodyParam url string optional The updated URL. Example: https://coolors.co/palette/dad7cd-a3b18a-588157-3a5a40-344e41
-     * @bodyParam tags string optional Updated comma separated tags. Example: greens, updated
-     */
+    * Update a resource
+    *
+    * Updates the information of an existing resource.
+    *
+    * @bodyParam title string required The updated title. Example: Updated Green Tones
+    * @bodyParam type string required The resource type. Example: color_palette
+    * @bodyParam description string optional The updated description. Example: Updated description
+    * @bodyParam url string optional The updated URL. Example: https://coolors.co/palette/dad7cd-a3b18a-588157-3a5a40-344e41
+    * @bodyParam tags string optional Updated comma separated tags. Example: greens, updated
+    *
+    * @response 200 {
+    *   "id": 1,
+    *   "title": "Updated Waves",
+    *   "type": "image",
+    *   "description": "Updated description",
+    *   "url": "https://example.com/image.jpg",
+    *   "image_path": null,
+    *   "color_data": null,
+    *   "tags": [{"id": 1, "name": "ocean"}],
+    *   "folder": {"id": 1, "name": "Design"}
+    * }
+    * @response 401 {
+    *   "message": "Unauthenticated"
+    * }
+    * @response 404 {
+    *   "message": "Resource not found"
+    * } 
+    */
     public function update(Request $request, $id) {
 
         $resource = Resource::where('id', $id)
@@ -116,10 +191,20 @@ class ResourceController extends Controller
     }
 
     /**
-     * Delete a resource
-     *
-     * Deletes the resource and cleans up any orphan tags.
-     */
+    * Delete a resource
+    *
+    * Deletes the resource and cleans up any orphan tags.
+    *
+    * @response 200 {
+    *   "message": "Resource deleted"
+    * }
+    * @response 401 {
+    *   "message": "Unauthenticated"
+    * }
+    * @response 404 {
+    *   "message": "Resource not found"
+    * }
+    */
     public function destroy(Request $request, $id) {
 
         $resource = Resource::where('id', $id)

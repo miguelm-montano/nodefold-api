@@ -119,7 +119,54 @@ endpoints:
       tags: 'greens, forest'
     fileParameters:
       image: null
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 201
+        content: |-
+          {
+            "id": 1,
+            "title": "Waves Photo",
+            "type": "image",
+            "description": "Natural photography",
+            "url": "https://example.com/image.jpg",
+            "image_path": null,
+            "color_data": null,
+            "tags": [{"id": 1, "name": "ocean"}],
+            "folder": {"id": 1, "name": "Design"}
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "Resource not found"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: |-
+          {
+            "message": "The title field is required.",
+            "errors": {
+              "title": ["The title field is required."]
+            }
+          }
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -199,13 +246,30 @@ endpoints:
     responses:
       -
         custom: []
+        status: 200
+        content: |-
+          [{
+            "id": 1,
+            "title": "Waves Photo",
+            "type": "image",
+            "description": "Natural photography",
+            "url": "https://example.com/image.jpg",
+            "image_path": null,
+            "color_data": null,
+            "tags": [{"id": 1, "name": "ocean"}],
+            "folder": {"id": 1, "name": "Design"}
+          }]
+        headers: []
+        description: ''
+      -
+        custom: []
         status: 401
-        content: '{"message":"Unauthenticated"}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
+        content: |-
+          {
+            "message": "Unauthenticated"
+          }
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -259,13 +323,39 @@ endpoints:
     responses:
       -
         custom: []
+        status: 200
+        content: |-
+          {
+            "id": 1,
+            "title": "Waves Photo",
+            "type": "image",
+            "description": "Natural photography",
+            "url": "https://example.com/image.jpg",
+            "image_path": null,
+            "color_data": null,
+            "tags": [{"id": 1, "name": "ocean"}],
+            "folder": {"id": 1, "name": "Design"}
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
         status: 401
-        content: '{"message":"Unauthenticated"}'
-        headers:
-          cache-control: 'no-cache, private'
-          content-type: application/json
-          access-control-allow-origin: '*'
-        description: null
+        content: |-
+          {
+            "message": "Unauthenticated"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "Resource not found"
+          }
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -376,7 +466,42 @@ endpoints:
       url: 'https://coolors.co/palette/dad7cd-a3b18a-588157-3a5a40-344e41'
       tags: 'greens, updated'
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "id": 1,
+            "title": "Updated Waves",
+            "type": "image",
+            "description": "Updated description",
+            "url": "https://example.com/image.jpg",
+            "image_path": null,
+            "color_data": null,
+            "tags": [{"id": 1, "name": "ocean"}],
+            "folder": {"id": 1, "name": "Design"}
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "Resource not found"
+          }
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers
@@ -427,7 +552,34 @@ endpoints:
     bodyParameters: []
     cleanBodyParameters: []
     fileParameters: []
-    responses: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "Resource deleted"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "Resource not found"
+          }
+        headers: []
+        description: ''
     responseFields: []
     auth:
       - headers

@@ -19,6 +19,16 @@ class UserController extends Controller
     * Get profile
     *
     * Returns the authenticated user's profile information.
+    *
+    * @response 200 {
+    *   "id": 1,
+    *   "name": "TestName",
+    *   "email": "testUser@nodefold.com",
+    *   "role": "user"
+    * }
+    * @response 401 {
+    *   "message": "Unauthenticated"
+    * }
     */
     public function me(Request $request) {
 
@@ -35,6 +45,22 @@ class UserController extends Controller
     * @bodyParam email string A valid unique email address. Example: test@nodefold.com
     * @bodyParam password string Min 8, max 15 characters. Must include uppercase and a number. Example: NewPass123
     * @bodyParam password_confirmation string Required if password is provided. Example: NewPass123
+    *
+    * @response 200 {
+    *   "id": 1,
+    *   "name": "Name Updated",
+    *   "email": "testUser@nodefold.com",
+    *   "role": "user"
+    * }
+    * @response 401 {
+    *   "message": "Unauthenticated"
+    * }
+    * @response 422 {
+    *   "message": "The email has already been taken.",
+    *   "errors": {
+    *     "email": ["The email has already been taken."]
+    *   }
+    * }
     */
     public function update(Request $request) {
 
@@ -62,6 +88,13 @@ class UserController extends Controller
     * Delete account
     *
     * Permanently deletes the authenticated user's account and all associated data.
+    *
+    * @response 200 {
+    *   "message": "User deleted successfully"
+    * }
+    * @response 401 {
+    *   "message": "Unauthenticated"
+    * }
     */
     public function destroy(Request $request) {
 

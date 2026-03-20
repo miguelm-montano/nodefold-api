@@ -7,13 +7,17 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 /**
- * @group Tags
- *
- * Endpoints for managing tags.
- * Tags are created when adding resources and deleted by
- * editing the resource when they become orphaned
- * All endpoints require authentication.
- */
+* @group Tags
+*
+* Endpoints for managing tags.
+* Tags are created automatically when adding or updating resources and deleted when they become orphaned — meaning no resources are associated with them.
+* 
+* ### Autocomplete
+* `GET /api/v1/tags` returns all tags belonging to the authenticated user.
+* This endpoint is useful for autocomplete when tagging resources — the user can start typing a tag name and the frontend can suggest existing tags to avoid duplicates.
+*
+* All endpoints require authentication.
+*/
 class TagController extends Controller
 {
     /**

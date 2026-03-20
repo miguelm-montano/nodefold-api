@@ -93,7 +93,7 @@ endpoints:
         content: |-
           {
             "message": "The name field is required.",
-          "errors": {
+            "errors": {
               "name": ["The name field is required."]
             }
           }

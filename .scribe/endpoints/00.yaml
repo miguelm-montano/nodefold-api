@@ -106,6 +106,15 @@ endpoints:
           }
         headers: []
         description: ''
+      -
+        custom: []
+        status: 429
+        content: |-
+          {
+            "message": "Too Many Requests"
+          }
+        headers: []
+        description: ''
     responseFields: []
     auth: []
     controller: null
@@ -141,7 +150,7 @@ endpoints:
         name: email
         description: 'The registered email address.'
         required: true
-        example: miguel@nodefold.com
+        example: testUser@nodefold.com
         type: string
         enumValues: []
         exampleWasSpecified: true
@@ -159,7 +168,7 @@ endpoints:
         nullable: false
         deprecated: false
     cleanBodyParameters:
-      email: miguel@nodefold.com
+      email: testUser@nodefold.com
       password: Password123
     fileParameters: []
     responses:
@@ -171,7 +180,7 @@ endpoints:
             "user": {
               "id": 1,
               "name": "TestName",
-              "email": "testUser@nodefold.com",
+              "email": "userTest@nodefold.com",
               "role": "user"
             },
             "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9..."
@@ -196,6 +205,15 @@ endpoints:
             "errors": {
               "email": ["The email field is required."]
             }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 429
+        content: |-
+          {
+            "message": "Too Many Requests"
           }
         headers: []
         description: ''

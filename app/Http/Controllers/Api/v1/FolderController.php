@@ -64,7 +64,7 @@ class FolderController extends Controller
     * }
     * @response 422 {
     *   "message": "The name field is required.",
-       "errors": {
+    *   "errors": {
     *     "name": ["The name field is required."]
     *   }
     * }

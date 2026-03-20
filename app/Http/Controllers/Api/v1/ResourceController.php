@@ -15,6 +15,12 @@ use Illuminate\Validation\Rule;
  * Endpoints for managing user resources.
  * Resources can be images, fonts, color palettes, icons or web links.
  * All endpoints require authentication.
+ * 
+ * ### color_data field
+ * The `color_data` field is only populated for `color_palette` type resources.
+ * It contains an array of hex color codes automatically extracted from a Coolors.co URL.
+ * Example: `["dad7cd", "a3b18a", "588157", "3a5a40", "344e41"]`
+ * For all other resource types, `color_data` will be `null`.
  */
 class ResourceController extends Controller
 {
@@ -92,6 +98,8 @@ class ResourceController extends Controller
     * Create a resource
     *
     * Creates a new resource inside the specified folder.
+    *
+    * When testing from this interface without uploading an image, disable the Content-Type header to avoid multipart issues.
     *
     * @urlParam id integer required The ID of the destination folder. Example: 1
     *

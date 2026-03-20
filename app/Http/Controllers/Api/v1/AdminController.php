@@ -11,8 +11,17 @@ use Illuminate\Http\Request;
 
 /**
 * @group Admin
-*
 * Endpoints for platform administration.
+* These endpoints are exclusively available to users with the `admin` role.
+* Any authenticated user without the `admin` role will receive a `403 Forbidden` response.
+*
+* ### Admin endpoints
+* - `GET /api/v1/admin/users` — list all registered users, filterable by role.
+* - `DELETE /api/v1/admin/users/{id}` — permanently delete a user and all their data.
+* - `GET /api/v1/admin/stats` — view global platform statistics including total counts and tag listing.
+*
+* ### How to get admin access
+* Admin users are created via database seeder. Run `php artisan db:seed` to create the default admin account.
 * All endpoints require authentication and admin role.
 */
 class AdminController extends Controller
@@ -58,7 +67,7 @@ class AdminController extends Controller
     * @response 403 {
     *   "message": "Unauthorized"
     * }
-     @response 404 {
+    * @response 404 {
     *   "message": "Resource not found"
     * }
     */

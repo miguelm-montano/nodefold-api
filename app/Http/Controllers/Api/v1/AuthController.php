@@ -42,6 +42,9 @@ class AuthController extends Controller
     *     "email": ["The email has already been taken."]
     *   }
     * }
+    * @response 429 {
+    *   "message": "Too Many Requests"
+    * }
     */
     public function register(Request $request) {
 
@@ -77,14 +80,14 @@ class AuthController extends Controller
     * Authenticates the user and returns an access token.
     *
     * @unauthenticated
-    * @bodyParam email string required The registered email address. Example: miguel@nodefold.com
+    * @bodyParam email string required The registered email address. Example: testUser@nodefold.com
     * @bodyParam password string required The account password. Example: Password123
     *
     * @response 200 {
     *   "user": {
     *     "id": 1,
     *     "name": "TestName",
-    *     "email": "testUser@nodefold.com",
+    *     "email": "userTest@nodefold.com",
     *     "role": "user"
     *   },
     *   "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9..."
@@ -97,6 +100,9 @@ class AuthController extends Controller
     *   "errors": {
     *     "email": ["The email field is required."]
     *   }
+    * }
+    * @response 429 {
+    *   "message": "Too Many Requests"
     * }
     */
     public function login(Request $request) {

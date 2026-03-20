@@ -4,6 +4,12 @@ description: |-
   Endpoints for managing user resources.
   Resources can be images, fonts, color palettes, icons or web links.
   All endpoints require authentication.
+
+  ### color_data field
+  The `color_data` field is only populated for `color_palette` type resources.
+  It contains an array of hex color codes automatically extracted from a Coolors.co URL.
+  Example: `["dad7cd", "a3b18a", "588157", "3a5a40", "344e41"]`
+  For all other resource types, `color_data` will be `null`.
 endpoints:
   -
     custom: []
@@ -18,10 +24,19 @@ endpoints:
         Endpoints for managing user resources.
         Resources can be images, fonts, color palettes, icons or web links.
         All endpoints require authentication.
+
+        ### color_data field
+        The `color_data` field is only populated for `color_palette` type resources.
+        It contains an array of hex color codes automatically extracted from a Coolors.co URL.
+        Example: `["dad7cd", "a3b18a", "588157", "3a5a40", "344e41"]`
+        For all other resource types, `color_data` will be `null`.
       subgroup: ''
       subgroupDescription: ''
       title: 'Create a resource'
-      description: 'Creates a new resource inside the specified folder.'
+      description: |-
+        Creates a new resource inside the specified folder.
+
+        When testing from this interface without uploading an image, disable the Content-Type header to avoid multipart issues.
       authenticated: true
       deprecated: false
     headers:
@@ -205,6 +220,12 @@ endpoints:
         Endpoints for managing user resources.
         Resources can be images, fonts, color palettes, icons or web links.
         All endpoints require authentication.
+
+        ### color_data field
+        The `color_data` field is only populated for `color_palette` type resources.
+        It contains an array of hex color codes automatically extracted from a Coolors.co URL.
+        Example: `["dad7cd", "a3b18a", "588157", "3a5a40", "344e41"]`
+        For all other resource types, `color_data` will be `null`.
       subgroup: ''
       subgroupDescription: ''
       title: 'List all resources'
@@ -308,6 +329,12 @@ endpoints:
         Endpoints for managing user resources.
         Resources can be images, fonts, color palettes, icons or web links.
         All endpoints require authentication.
+
+        ### color_data field
+        The `color_data` field is only populated for `color_palette` type resources.
+        It contains an array of hex color codes automatically extracted from a Coolors.co URL.
+        Example: `["dad7cd", "a3b18a", "588157", "3a5a40", "344e41"]`
+        For all other resource types, `color_data` will be `null`.
       subgroup: ''
       subgroupDescription: ''
       title: 'Get a resource'
@@ -394,6 +421,12 @@ endpoints:
         Endpoints for managing user resources.
         Resources can be images, fonts, color palettes, icons or web links.
         All endpoints require authentication.
+
+        ### color_data field
+        The `color_data` field is only populated for `color_palette` type resources.
+        It contains an array of hex color codes automatically extracted from a Coolors.co URL.
+        Example: `["dad7cd", "a3b18a", "588157", "3a5a40", "344e41"]`
+        For all other resource types, `color_data` will be `null`.
       subgroup: ''
       subgroupDescription: ''
       title: 'Update a resource'
@@ -540,6 +573,12 @@ endpoints:
         Endpoints for managing user resources.
         Resources can be images, fonts, color palettes, icons or web links.
         All endpoints require authentication.
+
+        ### color_data field
+        The `color_data` field is only populated for `color_palette` type resources.
+        It contains an array of hex color codes automatically extracted from a Coolors.co URL.
+        Example: `["dad7cd", "a3b18a", "588157", "3a5a40", "344e41"]`
+        For all other resource types, `color_data` will be `null`.
       subgroup: ''
       subgroupDescription: ''
       title: 'Delete a resource'

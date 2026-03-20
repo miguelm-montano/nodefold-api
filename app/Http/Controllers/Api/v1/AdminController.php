@@ -47,6 +47,8 @@ class AdminController extends Controller
     *
     * Permanently deletes a user account and all associated data including folders, resources and tags.
     *
+    * @urlParam id integer required The ID of the user. Example: 1
+    *
     * @response 200 {
     *   "message": "User deleted successfully"
     * }

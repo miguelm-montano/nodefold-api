@@ -25,7 +25,7 @@ class ResourceController extends Controller
     * Supports filtering via query parameters.
     *
     * @queryParam search string Filter resources by title. Example: Chair
-    * @queryParam Filter by tag status. Accepted values: true, false. Example: true
+    * @queryParam tagged string Filter by tag status. Accepted values: true, false. Example: true
     * @queryParam tag string Filter by tag name. Example: modern
     *
     * @response 200 [{
@@ -57,6 +57,8 @@ class ResourceController extends Controller
     * Get a resource
     *
     * Returns a single resource with its folder and tags.
+    *
+    * @urlParam id integer required The ID of the resource. Example: 1
     *
     * @response 200 {
     *   "id": 1,
@@ -91,6 +93,8 @@ class ResourceController extends Controller
     *
     * Creates a new resource inside the specified folder.
     *
+    * @urlParam id integer required The ID of the destination folder. Example: 1
+    *
     * @bodyParam title string required The title of the resource. Example: Green Tones
     * @bodyParam type string required The type of resource.<br> Allowed: font, image, color_palette, icon, web. Example: color_palette
     * @bodyParam description string optional A short description. Max 400 characters. Example: Green tones for the home page
@@ -107,6 +111,17 @@ class ResourceController extends Controller
     *   "image_path": null,
     *   "color_data": null,
     *   "tags": [{"id": 1, "name": "ocean"}],
+    *   "folder": {"id": 1, "name": "Design"}
+    * }
+    * @response 201 scenario="color_palette" {
+    *   "id": 2,
+    *   "title": "Green Tones",
+    *   "type": "color_palette",
+    *   "description": "Green tones for the home page",
+    *   "url": "https://coolors.co/palette/dad7cd-a3b18a-588157-3a5a40-344e41",
+    *   "image_path": null,
+    *   "color_data": ["dad7cd", "a3b18a", "588157", "3a5a40", "344e41"],
+    *   "tags": [{"id": 1, "name": "greens"}],
     *   "folder": {"id": 1, "name": "Design"}
     * }
     * @response 401 {
@@ -143,6 +158,8 @@ class ResourceController extends Controller
     * Update a resource
     *
     * Updates the information of an existing resource.
+    *
+    * @urlParam id integer required The ID of the resource. Example: 1
     *
     * @bodyParam title string required The updated title. Example: Updated Green Tones
     * @bodyParam type string required The resource type. Example: color_palette
@@ -194,6 +211,8 @@ class ResourceController extends Controller
     * Delete a resource
     *
     * Deletes the resource and cleans up any orphan tags.
+    *
+    * @urlParam id integer required The ID of the resource. Example: 1
     *
     * @response 200 {
     *   "message": "Resource deleted"

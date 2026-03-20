@@ -99,6 +99,8 @@ class FolderController extends Controller
     * 
     * Returns a single folder with its subfolders and resources.
     *
+    * @urlParam id integer required The ID of the folder. Example: 1
+    *
     * @response 200 {
     *   "id": 1,
     *   "name": "Design",
@@ -134,6 +136,8 @@ class FolderController extends Controller
     * Update a folder
     * 
     * Updates the name of a folder.
+    *
+    * @urlParam id integer required The ID of the folder. Example: 1
     * 
     * @bodyParam name string required The new name of the folder. Max 50 characters. Example: New Design
     *
@@ -168,6 +172,8 @@ class FolderController extends Controller
     * Delete a folder
     * 
     * Deletes a folder and all its subfolders, resources and orphan tags.
+    *
+    * @urlParam id integer required The ID of the folder. Example: 1
     *
     * @response 200 {
     *   "message": "Folder deleted"

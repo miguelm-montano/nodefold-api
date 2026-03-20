@@ -34,16 +34,16 @@ endpoints:
       id:
         custom: []
         name: id
-        description: 'The ID of the folder.'
+        description: 'The ID of the destination folder.'
         required: true
-        example: architecto
-        type: string
+        example: 1
+        type: integer
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: architecto
+      id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -141,6 +141,23 @@ endpoints:
         description: ''
       -
         custom: []
+        status: 201
+        content: |-
+          {
+            "id": 2,
+            "title": "Green Tones",
+            "type": "color_palette",
+            "description": "Green tones for the home page",
+            "url": "https://coolors.co/palette/dad7cd-a3b18a-588157-3a5a40-344e41",
+            "image_path": null,
+            "color_data": ["dad7cd", "a3b18a", "588157", "3a5a40", "344e41"],
+            "tags": [{"id": 1, "name": "greens"}],
+            "folder": {"id": 1, "name": "Design"}
+          }
+        headers: []
+        description: color_palette
+      -
+        custom: []
         status: 401
         content: |-
           {
@@ -216,10 +233,10 @@ endpoints:
         exampleWasSpecified: true
         nullable: false
         deprecated: false
-      Filter:
+      tagged:
         custom: []
-        name: Filter
-        description: 'by tag status. Accepted values: true, false.'
+        name: tagged
+        description: 'Filter by tag status. Accepted values: true, false.'
         required: false
         example: 'true'
         type: string
@@ -240,7 +257,7 @@ endpoints:
         deprecated: false
     cleanQueryParameters:
       search: Chair
-      Filter: 'true'
+      tagged: 'true'
       tag: modern
     bodyParameters: []
     cleanBodyParameters: []
@@ -309,14 +326,14 @@ endpoints:
         name: id
         description: 'The ID of the resource.'
         required: true
-        example: architecto
-        type: string
+        example: 1
+        type: integer
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: architecto
+      id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []
@@ -395,14 +412,14 @@ endpoints:
         name: id
         description: 'The ID of the resource.'
         required: true
-        example: architecto
-        type: string
+        example: 1
+        type: integer
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: architecto
+      id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters:
@@ -541,14 +558,14 @@ endpoints:
         name: id
         description: 'The ID of the resource.'
         required: true
-        example: architecto
-        type: string
+        example: 1
+        type: integer
         enumValues: []
-        exampleWasSpecified: false
+        exampleWasSpecified: true
         nullable: false
         deprecated: false
     cleanUrlParameters:
-      id: architecto
+      id: 1
     queryParameters: []
     cleanQueryParameters: []
     bodyParameters: []

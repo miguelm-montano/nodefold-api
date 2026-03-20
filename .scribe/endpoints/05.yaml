@@ -1,0 +1,277 @@
+name: Admin
+description: |-
+  Endpoints for platform administration.
+  These endpoints are exclusively available to users with the `admin` role.
+  Any authenticated user without the `admin` role will receive a `403 Forbidden` response.
+
+  ### Admin endpoints
+  - `GET /api/v1/admin/users` — list all registered users, filterable by role.
+  - `DELETE /api/v1/admin/users/{id}` — permanently delete a user and all their data.
+  - `GET /api/v1/admin/stats` — view global platform statistics including total counts and tag listing.
+
+  ### How to get admin access
+  Admin users are created via database seeder. Run `php artisan db:seed` to create the default admin account.
+  All endpoints require authentication and admin role.
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/admin/users
+    metadata:
+      custom: []
+      groupName: Admin
+      groupDescription: |-
+        Endpoints for platform administration.
+        These endpoints are exclusively available to users with the `admin` role.
+        Any authenticated user without the `admin` role will receive a `403 Forbidden` response.
+
+        ### Admin endpoints
+        - `GET /api/v1/admin/users` — list all registered users, filterable by role.
+        - `DELETE /api/v1/admin/users/{id}` — permanently delete a user and all their data.
+        - `GET /api/v1/admin/stats` — view global platform statistics including total counts and tag listing.
+
+        ### How to get admin access
+        Admin users are created via database seeder. Run `php artisan db:seed` to create the default admin account.
+        All endpoints require authentication and admin role.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'List all users'
+      description: 'Returns all registered users. Supports filtering by role.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      role:
+        custom: []
+        name: role
+        description: 'Filter users by role. Accepted values: user, admin.'
+        required: false
+        example: user
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      role: user
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          [{
+            "id": 1,
+            "name": "TestUser",
+            "email": "usertest@nodefold.com",
+            "role": "user"
+          }]
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 403
+        content: |-
+          {
+            "message": "Unauthorized"
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'api/v1/admin/users/{id}'
+    metadata:
+      custom: []
+      groupName: Admin
+      groupDescription: |-
+        Endpoints for platform administration.
+        These endpoints are exclusively available to users with the `admin` role.
+        Any authenticated user without the `admin` role will receive a `403 Forbidden` response.
+
+        ### Admin endpoints
+        - `GET /api/v1/admin/users` — list all registered users, filterable by role.
+        - `DELETE /api/v1/admin/users/{id}` — permanently delete a user and all their data.
+        - `GET /api/v1/admin/stats` — view global platform statistics including total counts and tag listing.
+
+        ### How to get admin access
+        Admin users are created via database seeder. Run `php artisan db:seed` to create the default admin account.
+        All endpoints require authentication and admin role.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Delete a user'
+      description: 'Permanently deletes a user account and all associated data including folders, resources and tags.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the user.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "User deleted successfully"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 403
+        content: |-
+          {
+            "message": "Unauthorized"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "Resource not found"
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/admin/stats
+    metadata:
+      custom: []
+      groupName: Admin
+      groupDescription: |-
+        Endpoints for platform administration.
+        These endpoints are exclusively available to users with the `admin` role.
+        Any authenticated user without the `admin` role will receive a `403 Forbidden` response.
+
+        ### Admin endpoints
+        - `GET /api/v1/admin/users` — list all registered users, filterable by role.
+        - `DELETE /api/v1/admin/users/{id}` — permanently delete a user and all their data.
+        - `GET /api/v1/admin/stats` — view global platform statistics including total counts and tag listing.
+
+        ### How to get admin access
+        Admin users are created via database seeder. Run `php artisan db:seed` to create the default admin account.
+        All endpoints require authentication and admin role.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Platform stats'
+      description: 'Returns global platform statistics including total counts of users, resources, folders and tags.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "total_users": 25,
+            "total_resources": 142,
+            "total_folders": 38,
+            "total_tags": 15,
+            "tags": [{"id": 1, "name": "ocean"}]
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 403
+        content: |-
+          {
+            "message": "Unauthorized"
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null

@@ -1,0 +1,646 @@
+name: Resources
+description: |-
+
+  Endpoints for managing user resources.
+  Resources can be images, fonts, color palettes, icons or web links.
+  All endpoints require authentication.
+
+  ### color_data field
+  The `color_data` field is only populated for `color_palette` type resources.
+  It contains an array of hex color codes automatically extracted from a Coolors.co URL.
+  Example: `["dad7cd", "a3b18a", "588157", "3a5a40", "344e41"]`
+  For all other resource types, `color_data` will be `null`.
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: 'api/v1/folders/{id}/resources'
+    metadata:
+      custom: []
+      groupName: Resources
+      groupDescription: |-
+
+        Endpoints for managing user resources.
+        Resources can be images, fonts, color palettes, icons or web links.
+        All endpoints require authentication.
+
+        ### color_data field
+        The `color_data` field is only populated for `color_palette` type resources.
+        It contains an array of hex color codes automatically extracted from a Coolors.co URL.
+        Example: `["dad7cd", "a3b18a", "588157", "3a5a40", "344e41"]`
+        For all other resource types, `color_data` will be `null`.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Create a resource'
+      description: |-
+        Creates a new resource inside the specified folder.
+
+        When testing from this interface without uploading an image, disable the Content-Type header to avoid multipart issues.
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_TOKEN}'
+      Content-Type: multipart/form-data
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the destination folder.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      title:
+        custom: []
+        name: title
+        description: 'The title of the resource.'
+        required: true
+        example: 'Green Tones'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      type:
+        custom: []
+        name: type
+        description: 'The type of resource.<br> Allowed: font, image, color_palette, icon, web.'
+        required: true
+        example: color_palette
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      description:
+        custom: []
+        name: description
+        description: 'optional A short description. Max 400 characters.'
+        required: false
+        example: 'Green tones for the home page'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      url:
+        custom: []
+        name: url
+        description: 'optional URL required for font, web, icon and color_palette types.'
+        required: false
+        example: 'https://coolors.co/palette/dad7cd-a3b18a-588157-3a5a40-344e41'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      tags:
+        custom: []
+        name: tags
+        description: 'optional Comma separated list of tags.'
+        required: false
+        example: 'greens, forest'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      image:
+        custom: []
+        name: image
+        description: 'optional Image file. Accepted: jpg, jpeg, png, webp, gif. Max 10MB.'
+        required: false
+        example: null
+        type: file
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      title: 'Green Tones'
+      type: color_palette
+      description: 'Green tones for the home page'
+      url: 'https://coolors.co/palette/dad7cd-a3b18a-588157-3a5a40-344e41'
+      tags: 'greens, forest'
+    fileParameters:
+      image: null
+    responses:
+      -
+        custom: []
+        status: 201
+        content: |-
+          {
+            "id": 1,
+            "title": "Waves Photo",
+            "type": "image",
+            "description": "Natural photography",
+            "url": "https://example.com/image.jpg",
+            "image_path": null,
+            "color_data": null,
+            "tags": [{"id": 1, "name": "ocean"}],
+            "folder": {"id": 1, "name": "Design"}
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 201
+        content: |-
+          {
+            "id": 2,
+            "title": "Green Tones",
+            "type": "color_palette",
+            "description": "Green tones for the home page",
+            "url": "https://coolors.co/palette/dad7cd-a3b18a-588157-3a5a40-344e41",
+            "image_path": null,
+            "color_data": ["dad7cd", "a3b18a", "588157", "3a5a40", "344e41"],
+            "tags": [{"id": 1, "name": "greens"}],
+            "folder": {"id": 1, "name": "Design"}
+          }
+        headers: []
+        description: color_palette
+      -
+        custom: []
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "Resource not found"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: |-
+          {
+            "message": "The title field is required.",
+            "errors": {
+              "title": ["The title field is required."]
+            }
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/resources
+    metadata:
+      custom: []
+      groupName: Resources
+      groupDescription: |-
+
+        Endpoints for managing user resources.
+        Resources can be images, fonts, color palettes, icons or web links.
+        All endpoints require authentication.
+
+        ### color_data field
+        The `color_data` field is only populated for `color_palette` type resources.
+        It contains an array of hex color codes automatically extracted from a Coolors.co URL.
+        Example: `["dad7cd", "a3b18a", "588157", "3a5a40", "344e41"]`
+        For all other resource types, `color_data` will be `null`.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'List all resources'
+      description: |-
+        Returns all resources belonging to the authenticated user.
+        Supports filtering via query parameters.
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      search:
+        custom: []
+        name: search
+        description: 'Filter resources by title.'
+        required: false
+        example: Chair
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      tagged:
+        custom: []
+        name: tagged
+        description: 'Filter by tag status. Accepted values: true, false.'
+        required: false
+        example: 'true'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      tag:
+        custom: []
+        name: tag
+        description: 'Filter by tag name.'
+        required: false
+        example: modern
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      search: Chair
+      tagged: 'true'
+      tag: modern
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          [{
+            "id": 1,
+            "title": "Waves Photo",
+            "type": "image",
+            "description": "Natural photography",
+            "url": "https://example.com/image.jpg",
+            "image_path": null,
+            "color_data": null,
+            "tags": [{"id": 1, "name": "ocean"}],
+            "folder": {"id": 1, "name": "Design"}
+          }]
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated"
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/v1/resources/{id}'
+    metadata:
+      custom: []
+      groupName: Resources
+      groupDescription: |-
+
+        Endpoints for managing user resources.
+        Resources can be images, fonts, color palettes, icons or web links.
+        All endpoints require authentication.
+
+        ### color_data field
+        The `color_data` field is only populated for `color_palette` type resources.
+        It contains an array of hex color codes automatically extracted from a Coolors.co URL.
+        Example: `["dad7cd", "a3b18a", "588157", "3a5a40", "344e41"]`
+        For all other resource types, `color_data` will be `null`.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get a resource'
+      description: 'Returns a single resource with its folder and tags.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the resource.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "id": 1,
+            "title": "Waves Photo",
+            "type": "image",
+            "description": "Natural photography",
+            "url": "https://example.com/image.jpg",
+            "image_path": null,
+            "color_data": null,
+            "tags": [{"id": 1, "name": "ocean"}],
+            "folder": {"id": 1, "name": "Design"}
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "Resource not found"
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PUT
+    uri: 'api/v1/resources/{id}'
+    metadata:
+      custom: []
+      groupName: Resources
+      groupDescription: |-
+
+        Endpoints for managing user resources.
+        Resources can be images, fonts, color palettes, icons or web links.
+        All endpoints require authentication.
+
+        ### color_data field
+        The `color_data` field is only populated for `color_palette` type resources.
+        It contains an array of hex color codes automatically extracted from a Coolors.co URL.
+        Example: `["dad7cd", "a3b18a", "588157", "3a5a40", "344e41"]`
+        For all other resource types, `color_data` will be `null`.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Update a resource'
+      description: 'Updates the information of an existing resource.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the resource.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      title:
+        custom: []
+        name: title
+        description: 'The updated title.'
+        required: true
+        example: 'Updated Green Tones'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      type:
+        custom: []
+        name: type
+        description: 'The resource type.'
+        required: true
+        example: color_palette
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      description:
+        custom: []
+        name: description
+        description: 'optional The updated description.'
+        required: false
+        example: 'Updated description'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      url:
+        custom: []
+        name: url
+        description: 'optional The updated URL.'
+        required: false
+        example: 'https://coolors.co/palette/dad7cd-a3b18a-588157-3a5a40-344e41'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      tags:
+        custom: []
+        name: tags
+        description: 'optional Updated comma separated tags.'
+        required: false
+        example: 'greens, updated'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      title: 'Updated Green Tones'
+      type: color_palette
+      description: 'Updated description'
+      url: 'https://coolors.co/palette/dad7cd-a3b18a-588157-3a5a40-344e41'
+      tags: 'greens, updated'
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "id": 1,
+            "title": "Updated Waves",
+            "type": "image",
+            "description": "Updated description",
+            "url": "https://example.com/image.jpg",
+            "image_path": null,
+            "color_data": null,
+            "tags": [{"id": 1, "name": "ocean"}],
+            "folder": {"id": 1, "name": "Design"}
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "Resource not found"
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'api/v1/resources/{id}'
+    metadata:
+      custom: []
+      groupName: Resources
+      groupDescription: |-
+
+        Endpoints for managing user resources.
+        Resources can be images, fonts, color palettes, icons or web links.
+        All endpoints require authentication.
+
+        ### color_data field
+        The `color_data` field is only populated for `color_palette` type resources.
+        It contains an array of hex color codes automatically extracted from a Coolors.co URL.
+        Example: `["dad7cd", "a3b18a", "588157", "3a5a40", "344e41"]`
+        For all other resource types, `color_data` will be `null`.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Delete a resource'
+      description: 'Deletes the resource and cleans up any orphan tags.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the resource.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "Resource deleted"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "Resource not found"
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null

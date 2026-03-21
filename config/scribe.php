@@ -36,7 +36,7 @@ DESC,
 
     // The base URL displayed in the docs.
     // If you're using `laravel` type, you can set this to a dynamic string, like '{{ config("app.tenant_url") }}' to get a dynamic base URL.
-    'base_url' => 'http://localhost:8000',
+    'base_url' => env('APP_URL', 'http://localhost:8000'),
 
     // Routes to include in the docs
     'routes' => [
@@ -94,7 +94,9 @@ DESC,
     ],
 
     'external' => [
-        'html_attributes' => [],
+        'html_attributes' => [
+            'spec-url' => 'https://nodefold-api.onrender.com/docs.openapi',
+        ],
     ],
 
     'try_it_out' => [

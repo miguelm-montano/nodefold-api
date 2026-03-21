@@ -1,13 +1,28 @@
 #!/bin/bash
 
-# Generate app key if not set
-php artisan key:generate --force
+cat > /var/www/.env << EOF
+APP_NAME=Nodefold
+APP_ENV=${APP_ENV:-production}
+APP_KEY=${APP_KEY}
+APP_DEBUG=${APP_DEBUG:-false}
+APP_URL=${APP_URL}
 
-# Run migrations
+LOG_CHANNEL=stderr
+LOG_LEVEL=error
+
+DB_CONNECTION=pgsql
+DB_URL=${DATABASE_URL}
+
+BROADCAST_DRIVER=log
+CACHE_DRIVER=file
+QUEUE_CONNECTION=sync
+SESSION_DRIVER=file
+EOF
+
 php artisan migrate --force
-
-# Start PHP-FPM in background
+php artisan passport:install --force
+chown -R www-data:www-data /var/www
+su -s /bin/bash www-data -c "php /var/www/artisan scribe:generate"
 php-fpm -D
-
-# Start Nginx in foreground
+sleep 2
 nginx -g "daemon off;"

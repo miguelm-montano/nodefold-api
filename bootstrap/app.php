@@ -12,6 +12,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->trustProxies(at: '*');
+        $middleware->redirectGuestsTo(fn() => response()->json(['message' => 'Unauthenticated'], 401));
         $middleware->alias([
         'isAdmin' => \App\Http\Middleware\IsAdmin::class,
     ]);
@@ -27,6 +29,10 @@ return Application::configure(basePath: dirname(__DIR__))
         });
 
         $exceptions->render(function (\Illuminate\Auth\AuthenticationException $e) {
+            return response()->json(['message' => 'Unauthenticated'], 401);
+        });
+
+        $exceptions->render(function (\League\OAuth2\Server\Exception\OAuthServerException $e) {
             return response()->json(['message' => 'Unauthenticated'], 401);
         });
     })->create();

@@ -1,929 +1,816 @@
 {
-  "info": {
-    "_postman_id": "99bba594-86e8-48d4-ab91-f433aef44a80",
-    "name": "Nodefold API",
-    "description": "# **Nodefold API**\n\nNodefold API is a RESTful API for managing design assets organized in folders. It allows authenticated users to create, organize and retrieve resources such as images, fonts, color palettes, icons and web links.\n\n**Base URL** `http://localhost/api`\n\n**Authentication** This API uses token based authentication via Laravel Passport. To access protected endpoints, include the token in the request header:\n\n`Authorization: Bearer {token}`\n\nThe token is obtained via `POST /login` and must be included in every subsequent request.\n\n**Response format** All responses are returned in JSON format.\n\n**Roles** The API handles two user roles:\n\n- `user` — standard access to their own folders and resources.\n    \n- `admin` — additional access to user management and global statistics.\n    \n\n### **HTTP Status codes**\n\n| **Code** | **Meaning** |\n| --- | --- |\n| **200** | Ok |\n| **201** | Created |\n| **204** | No Content |\n| **400** | Bad Request |\n| **401** | Unauthenticated |\n| **403** | Forbidden |\n| **404** | Not Faund |\n| **422** | Validation Error |",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "53033314",
-    "_collection_link": "https://go.postman.co/collection/53033314-99bba594-86e8-48d4-ab91-f433aef44a80?source=collection_link"
-  },
-  "item": [
-    {
-      "name": "Auth",
-      "item": [
-        {
-          "name": "Register",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "const response = pm.response.json();",
-                  "pm.environment.set(\"token\", response.token);"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"name\": \"TestName\",\n    \"email\": \"testUser@nodefold.com\",\n    \"password\": \"Password123\",\n    \"password_confirmation\": \"Password123\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url}}/register",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "register"
-              ]
-            },
-            "description": "Creates a new user account by submitting the required registration details.\n\n**Endpoint:** `POST /api/v1/register`\n\n### Request Body\n\n| Field | Type | Description |\n| --- | --- | --- |\n| `name` | string | The full name of the new user |\n| `email` | string | A valid and unique email address |\n| `password` | string | The desired account password |\n| `password_confirmation` | string | Must match the `password` field |\n\n### On Success\n\nReturns `201 Created` with the user data and a token.\n\n``` json\n{\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"Test User\",\n    \"email\": \"demo@test.com\",\n    \"role\": \"user\"\n  },\n  \"token\": \"eyJ0eXAiOiJKV1...\"\n}\n\n ```\n\nThe token is automatically saved to the `token` environment variable and used to authenticate subsequent requests."
-          },
-          "response": []
-        },
-        {
-          "name": "Login",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "const response = pm.response.json();",
-                  "pm.environment.set(\"token\", response.token);"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            },
-            {
-              "listen": "prerequest",
-              "script": {
-                "exec": [
-                  ""
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"email\": \"testUser@nodefold.com\",\n    \"password\": \"Password123\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url}}/login",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "login"
-              ]
-            },
-            "description": "Authenticates an existing user and returns an access token.\n\n**Endpoint:** `POST /api/v1/login`\n\n### Request Body\n\n| Field | Type | Description |\n| --- | --- | --- |\n| `email` | string | The registered email address |\n| `password` | string | The account password |\n\n### On Success\n\nReturns `200 OK` with the user data and a token.\n\n``` json\n{\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"Test User\",\n    \"email\": \"demo@test.com\",\n    \"role\": \"user\"\n  },\n  \"token\": \"eyJ0eXAiOiJKV1...\"\n}\n\n ```\n\nThe token is automatically saved to the `token` environment variable and used to authenticate subsequent requests."
-          },
-          "response": []
-        },
-        {
-          "name": "Logout",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "POST",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/logout",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "logout"
-              ]
-            },
-            "description": "Invalidates the current access token and logs the user out.\n\n**Endpoint:** `POST /api/v1/logout`\n\n### Authentication\n\nRequires a valid Bearer token in the `Authorization` header.\n\n### On Success\n\nReturns `200 OK` with a confirmation message.\n\n``` json\n{\n  \"message\": \"Logged out successfully\"\n}\n\n ```\n\nThe token is invalidated server-side and must be discarded by the client."
-          },
-          "response": []
-        }
-      ],
-      "description": "Endpoints for user registration, login and logout.\n\nRegistration and login do not require authentication. Every other endpoint in this API requires a **valid Bearer token** obtained from `POST /login`.\n\nUpon login, a token is returned that must be stored by the client and included in the `Authorization` header of every subsequent request. Upon logout, the token is invalidated server-side and must be discarded by the client."
+    "info": {
+        "_postman_id": "99bba594-86e8-48d4-ab91-f433aef44a80",
+        "name": "Nodefold API",
+        "description": "# **Nodefold API**\n\nNodefold API is a RESTful API for managing design assets organized in folders. It allows authenticated users to create, organize and retrieve resources such as images, fonts, color palettes, icons and web links.\n\n**Base URL** `http://localhost/api`\n\n**Authentication** This API uses token based authentication via Laravel Passport. To access protected endpoints, include the token in the request header:\n\n`Authorization: Bearer {token}`\n\nThe token is obtained via `POST /login` and must be included in every subsequent request.\n\n**Response format** All responses are returned in JSON format.\n\n**Roles** The API handles two user roles:\n\n- `user` — standard access to their own folders and resources.\n    \n- `admin` — additional access to user management and global statistics.\n    \n\n### **HTTP Status codes**\n\n| **Code** | **Meaning** |\n| --- | --- |\n| **200** | Ok |\n| **201** | Created |\n| **204** | No Content |\n| **400** | Bad Request |\n| **401** | Unauthenticated |\n| **403** | Forbidden |\n| **404** | Not Faund |\n| **422** | Validation Error |",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "_exporter_id": "53033314",
+        "_collection_link": "https://go.postman.co/collection/53033314-99bba594-86e8-48d4-ab91-f433aef44a80?source=collection_link"
     },
-    {
-      "name": "Users",
-      "item": [
+    "item": [
         {
-          "name": "See Profile",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
+            "name": "Auth",
+            "item": [
                 {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
+                    "name": "Register",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "const response = pm.response.json();",
+                                    "pm.environment.set(\"token\", response.token);"
+                                ],
+                                "type": "text/javascript",
+                                "packages": {},
+                                "requests": {}
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"TestName\",\n    \"email\": \"testUser@nodefold.com\",\n    \"password\": \"Password123\",\n    \"password_confirmation\": \"Password123\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/register",
+                            "host": ["{{base_url}}"],
+                            "path": ["register"]
+                        },
+                        "description": "Creates a new user account by submitting the required registration details.\n\n**Endpoint:** `POST /api/v1/register`\n\n### Request Body\n\n| Field | Type | Description |\n| --- | --- | --- |\n| `name` | string | The full name of the new user |\n| `email` | string | A valid and unique email address |\n| `password` | string | The desired account password |\n| `password_confirmation` | string | Must match the `password` field |\n\n### On Success\n\nReturns `201 Created` with the user data and a token.\n\n``` json\n{\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"Test User\",\n    \"email\": \"demo@test.com\",\n    \"role\": \"user\"\n  },\n  \"token\": \"eyJ0eXAiOiJKV1...\"\n}\n\n ```\n\nThe token is automatically saved to the `token` environment variable and used to authenticate subsequent requests."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Login",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "const response = pm.response.json();",
+                                    "pm.environment.set(\"token\", response.token);"
+                                ],
+                                "type": "text/javascript",
+                                "packages": {},
+                                "requests": {}
+                            }
+                        },
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "exec": [""],
+                                "type": "text/javascript",
+                                "packages": {},
+                                "requests": {}
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"testUser@nodefold.com\",\n    \"password\": \"Password123\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/login",
+                            "host": ["{{base_url}}"],
+                            "path": ["login"]
+                        },
+                        "description": "Authenticates an existing user and returns an access token.\n\n**Endpoint:** `POST /api/v1/login`\n\n### Request Body\n\n| Field | Type | Description |\n| --- | --- | --- |\n| `email` | string | The registered email address |\n| `password` | string | The account password |\n\n### On Success\n\nReturns `200 OK` with the user data and a token.\n\n``` json\n{\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"Test User\",\n    \"email\": \"demo@test.com\",\n    \"role\": \"user\"\n  },\n  \"token\": \"eyJ0eXAiOiJKV1...\"\n}\n\n ```\n\nThe token is automatically saved to the `token` environment variable and used to authenticate subsequent requests."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Logout",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/logout",
+                            "host": ["{{base_url}}"],
+                            "path": ["logout"]
+                        },
+                        "description": "Invalidates the current access token and logs the user out.\n\n**Endpoint:** `POST /api/v1/logout`\n\n### Authentication\n\nRequires a valid Bearer token in the `Authorization` header.\n\n### On Success\n\nReturns `200 OK` with a confirmation message.\n\n``` json\n{\n  \"message\": \"Logged out successfully\"\n}\n\n ```\n\nThe token is invalidated server-side and must be discarded by the client."
+                    },
+                    "response": []
                 }
-              ]
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/user/me",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "user",
-                "me"
-              ]
-            },
-            "description": "Returns the authenticated user's profile information.\n\n**Endpoint:** `GET /api/v1/user/me`\n\n### On Success\n\nReturns `200 OK` with the user data.\n\n``` json\n{\n  \"id\": 1,\n  \"name\": \"Test User\",\n  \"email\": \"demo@test.com\",\n  \"role\": \"user\",\n  \"created_at\": \"2026-03-11T11:50:57.000000Z\",\n  \"updated_at\": \"2026-03-11T11:50:57.000000Z\"\n}\n\n ```"
-          },
-          "response": []
+            ],
+            "description": "Endpoints for user registration, login and logout.\n\nRegistration and login do not require authentication. Every other endpoint in this API requires a **valid Bearer token** obtained from `POST /login`.\n\nUpon login, a token is returned that must be stored by the client and included in the `Authorization` header of every subsequent request. Upon logout, the token is invalidated server-side and must be discarded by the client."
         },
         {
-          "name": "Edit profile",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
+            "name": "Users",
+            "item": [
                 {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
+                    "name": "See Profile",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/users/me",
+                            "host": ["{{base_url}}"],
+                            "path": ["users", "me"]
+                        },
+                        "description": "Returns the authenticated user's profile information.\n\n**Endpoint:** `GET /api/v1/users/me`\n\n### On Success\n\nReturns `200 OK` with the user data.\n\n``` json\n{\n  \"id\": 1,\n  \"name\": \"Test User\",\n  \"email\": \"demo@test.com\",\n  \"role\": \"user\",\n  \"created_at\": \"2026-03-11T11:50:57.000000Z\",\n  \"updated_at\": \"2026-03-11T11:50:57.000000Z\"\n}\n\n ```"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Edit profile",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Test Change\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/users/me",
+                            "host": ["{{base_url}}"],
+                            "path": ["users", "me"]
+                        },
+                        "description": "Updates the authenticated user's profile information.\n\n**Endpoint:** `PUT /api/v1/users/me`\n\n### Request Body\n\n| Field | Type | Description |\n| --- | --- | --- |\n| `name` | string | The updated full name of the user |\n| `email` | string | The updated email address, must be unique |\n| `password` | string | The new password (optional) |\n| `password_confirmation` | string | Must match the `password` field (required if password is provided) |\n\n### On Success\n\nReturns `200 OK` with the updated user data.\n\n``` json\n{\n  \"id\": 1,\n  \"name\": \"Test Updated\",\n  \"email\": \"demo@test.com\",\n  \"role\": \"user\",\n  \"created_at\": \"2026-03-11T11:50:57.000000Z\",\n  \"updated_at\": \"2026-03-11T12:30:00.000000Z\"\n}\n\n ```"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete User",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/users/me",
+                            "host": ["{{base_url}}"],
+                            "path": ["users", "me"]
+                        },
+                        "description": "Deletes the authenticated user's account and all associated data.\n\n**Endpoint:** `DELETE /api/v1/users/me`\n\n### On Success\n\nReturns `200 OK`.\n\n``` json\n{\n  \"message\": \"User deleted successfully\"\n}\n\n ```"
+                    },
+                    "response": []
                 }
-              ]
-            },
-            "method": "PUT",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"name\": \"Test Change\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url}}/user/me",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "user",
-                "me"
-              ]
-            },
-            "description": "Updates the authenticated user's profile information.\n\n**Endpoint:** `PUT /api/v1/user/me`\n\n### Request Body\n\n| Field | Type | Description |\n| --- | --- | --- |\n| `name` | string | The updated full name of the user |\n| `email` | string | The updated email address, must be unique |\n| `password` | string | The new password (optional) |\n| `password_confirmation` | string | Must match the `password` field (required if password is provided) |\n\n### On Success\n\nReturns `200 OK` with the updated user data.\n\n``` json\n{\n  \"id\": 1,\n  \"name\": \"Test Updated\",\n  \"email\": \"demo@test.com\",\n  \"role\": \"user\",\n  \"created_at\": \"2026-03-11T11:50:57.000000Z\",\n  \"updated_at\": \"2026-03-11T12:30:00.000000Z\"\n}\n\n ```"
-          },
-          "response": []
+            ],
+            "description": "Endpoints for managing the authenticated user's own account.\n\n##### All endpoints in this section **require a valid Bearer token** in the `Authorization` header.\n\nA user can view, update and delete their own account. Admin users have additional access to manage other users' accounts via the `/users` endpoints."
         },
         {
-          "name": "Delete User",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
+            "name": "Folders",
+            "item": [
                 {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/user/me",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "user",
-                "me"
-              ]
-            },
-            "description": "Deletes the authenticated user's account and all associated data.\n\n**Endpoint:** `DELETE /api/v1/user/me`\n\n### On Success\n\nReturns `200 OK`.\n\n``` json\n{\n  \"message\": \"User deleted successfully\"\n}\n\n ```"
-          },
-          "response": []
-        }
-      ],
-      "description": "Endpoints for managing the authenticated user's own account.\n\n##### All endpoints in this section **require a valid Bearer token** in the `Authorization` header.\n\nA user can view, update and delete their own account. Admin users have additional access to manage other users' accounts via the `/users` endpoints."
-    },
-    {
-      "name": "Folders",
-      "item": [
-        {
-          "name": "Create Folder",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "const response = pm.response.json();",
-                  "pm.environment.set(\"folder_id\", response.id);"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
+                    "name": "Create Folder",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "const response = pm.response.json();",
+                                    "pm.environment.set(\"folder_id\", response.id);"
+                                ],
+                                "type": "text/javascript",
+                                "packages": {},
+                                "requests": {}
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Design\",\n    \"parent_id\": null\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/folders",
+                            "host": ["{{base_url}}"],
+                            "path": ["folders"]
+                        },
+                        "description": "Create a new folde by submitting the required details.\n\n**Endpoint:** `POST /api/v1/folders`\n\n### Request Body\n\n| **Field** | **Type** | **Description** |\n| --- | --- | --- |\n| `name` | string | The name of the folder |\n| `parent_id` | int | Only if the folder is a subfolder |\n\n### On Success\n\nReturns `201 Created` with the folder data.\n\n``` json\n{\n    \"name\": \"Design\",\n    \"parent_id\": null,\n    \"id\": 1\n}\n\n ```\n\n### Subfolder\n\nReturns `201 Created` with the folder data.\n\n``` json\n{\n    \"name\": \"Fonts\",\n    \"parent_id\": 10,\n    \"id\": 2\n}\n\n ```"
+                    },
+                    "response": []
+                },
                 {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"name\": \"Design\",\n    \"parent_id\": null\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url}}/folders",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "folders"
-              ]
-            },
-            "description": "Create a new folde by submitting the required details.\n\n**Endpoint:** `POST /api/v1/folders`\n\n### Request Body\n\n| **Field** | **Type** | **Description** |\n| --- | --- | --- |\n| `name` | string | The name of the folder |\n| `parent_id` | int | Only if the folder is a subfolder |\n\n### On Success\n\nReturns `201 Created` with the folder data.\n\n``` json\n{\n    \"name\": \"Design\",\n    \"parent_id\": null,\n    \"id\": 1\n}\n\n ```\n\n### Subfolder\n\nReturns `201 Created` with the folder data.\n\n``` json\n{\n    \"name\": \"Fonts\",\n    \"parent_id\": 10,\n    \"id\": 2\n}\n\n ```"
-          },
-          "response": []
-        },
-        {
-          "name": "All Folders",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
+                    "name": "All Folders",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/folders",
+                            "host": ["{{base_url}}"],
+                            "path": ["folders"]
+                        },
+                        "description": "Returns all the folders user's created. Each folder cotains information of subfolders and resources.\n\n**Endpoint:** `GET /api/v1/folders`\n\n### On Success\n\nReturns `200 OK` with the folder data.\n\n``` json\n[\n    {\n        \"id\": 1,\n        \"parent_id\": null,\n        \"name\": \"Design\",\n        \"total_resources_count\": 0,\n        \"folders\": [\n            {\n                \"id\": 2,\n                \"parent_id\": 1,\n                \"name\": \"Fonts\",\n                \"resources\": []\n            }\n        ],\n        \"resources\": []\n    }\n]\n\n ```\n\n### Empty folders\n\nReturns `200 OK` with an empty response.\n\n``` json\n[]\n\n ```"
+                    },
+                    "response": []
+                },
                 {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/folders",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "folders"
-              ]
-            },
-            "description": "Returns all the folders user's created. Each folder cotains information of subfolders and resources.\n\n**Endpoint:** `GET /api/v1/folders`\n\n### On Success\n\nReturns `200 OK` with the folder data.\n\n``` json\n[\n    {\n        \"id\": 1,\n        \"parent_id\": null,\n        \"name\": \"Design\",\n        \"total_resources_count\": 0,\n        \"folders\": [\n            {\n                \"id\": 2,\n                \"parent_id\": 1,\n                \"name\": \"Fonts\",\n                \"resources\": []\n            }\n        ],\n        \"resources\": []\n    }\n]\n\n ```\n\n### Empty folders\n\nReturns `200 OK` with an empty response.\n\n``` json\n[]\n\n ```"
-          },
-          "response": []
-        },
-        {
-          "name": "Folder by ID",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
+                    "name": "Folder by ID",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/folders/{{folder_id}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["folders", "{{folder_id}}"]
+                        },
+                        "description": "Returns the specific folder information including resources if they have it.\n\n**Endpoint:** `GET /api/v1/folders/{id}`\n\n### On Success\n\nReturns `200 OK` with the folder data.\n\n``` json\n{\n    \"id\": 1,\n    \"parent_id\": null,\n    \"name\": \"Design\",\n    \"folders\": [],\n    \"resources\": []\n}\n\n ```"
+                    },
+                    "response": []
+                },
                 {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/folders/{{folder_id}}",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "folders",
-                "{{folder_id}}"
-              ]
-            },
-            "description": "Returns the specific folder information including resources if they have it.\n\n**Endpoint:** `GET /api/v1/folders/{id}`\n\n### On Success\n\nReturns `200 OK` with the folder data.\n\n``` json\n{\n    \"id\": 1,\n    \"parent_id\": null,\n    \"name\": \"Design\",\n    \"folders\": [],\n    \"resources\": []\n}\n\n ```"
-          },
-          "response": []
-        },
-        {
-          "name": "Update Folder",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
+                    "name": "Update Folder",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"New Name\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/folders/{{folder_id}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["folders", "{{folder_id}}"]
+                        },
+                        "description": "Update the information of a folder.\n\n**Endpoint:** `PUT /api/v1/folders/{id}`\n\n### Request Body\n\n| Field | Type | Description |\n| --- | --- | --- |\n| `name` | string | The updated name of the folder |\n\n### On Success\n\nReturns `200 OK` with the updated folder data.\n\n``` json\n{\n    \"id\": 1,\n    \"parent_id\": null,\n    \"name\": \"New Name\"\n}\n\n ```"
+                    },
+                    "response": []
+                },
                 {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
+                    "name": "Delete Folder",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/folders/{{folder_id}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["folders", "{{folder_id}}"]
+                        },
+                        "description": "Deletes the folder and all associated data.\n\n**Endpoint:** `DELETE /api/v1/folders/{id}`\n\n### On Success\n\nReturns `200 OK` with the confirmation message.\n\n``` json\n{\n    \"message\": \"Folder deleted\"\n}\n\n ```"
+                    },
+                    "response": []
                 }
-              ]
-            },
-            "method": "PUT",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"name\": \"New Name\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url}}/folders/{{folder_id}}",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "folders",
-                "{{folder_id}}"
-              ]
-            },
-            "description": "Update the information of a folder.\n\n**Endpoint:** `PUT /api/v1/folders/{id}`\n\n### Request Body\n\n| Field | Type | Description |\n| --- | --- | --- |\n| `name` | string | The updated name of the folder |\n\n### On Success\n\nReturns `200 OK` with the updated folder data.\n\n``` json\n{\n    \"id\": 1,\n    \"parent_id\": null,\n    \"name\": \"New Name\"\n}\n\n ```"
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Folder",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
+            ],
+            "description": "Endpoints for managing folders and subfolders. Folders can have one level of nesting — a folder can contain subfolders, but subfolders cannot contain further subfolders.\n\n##### All endpoints in this section **require a valid Bearer token** in the `Authorization` header.\n\nA user can view their folders with all the resources inside, update the name and delete their own folders.",
+            "event": [
                 {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
+                    "listen": "prerequest",
+                    "script": {
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {},
+                        "exec": [""]
+                    }
+                },
+                {
+                    "listen": "test",
+                    "script": {
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {},
+                        "exec": [""]
+                    }
                 }
-              ]
-            },
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/folders/{{folder_id}}",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "folders",
-                "{{folder_id}}"
-              ]
-            },
-            "description": "Deletes the folder and all associated data.\n\n**Endpoint:** `DELETE /api/v1/folders/{id}`\n\n### On Success\n\nReturns `200 OK` with the confirmation message.\n\n``` json\n{\n    \"message\": \"Folder deleted\"\n}\n\n ```"
-          },
-          "response": []
-        }
-      ],
-      "description": "Endpoints for managing folders and subfolders. Folders can have one level of nesting — a folder can contain subfolders, but subfolders cannot contain further subfolders.\n\n##### All endpoints in this section **require a valid Bearer token** in the `Authorization` header.\n\nA user can view their folders with all the resources inside, update the name and delete their own folders.",
-      "event": [
-        {
-          "listen": "prerequest",
-          "script": {
-            "type": "text/javascript",
-            "packages": {},
-            "requests": {},
-            "exec": [
-              ""
             ]
-          }
         },
         {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "packages": {},
-            "requests": {},
-            "exec": [
-              ""
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "name": "Resources",
-      "item": [
-        {
-          "name": "Create Resource",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
+            "name": "Resources",
+            "item": [
                 {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
+                    "name": "Create Resource",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"title\": \"Web reference\",\n    \"type\": \"web\",\n    \"url\": \"https://coolors.co/\",\n    \"description\": \"Web for colors\",\n    \"tags\": \"colors, reference\",\n    \"image\": null\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/folders/{{folder_id}}/resources",
+                            "host": ["{{base_url}}"],
+                            "path": ["folders", "{{folder_id}}", "resources"]
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "color_palette",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json",
+                                        "type": "text"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"title\": \"Greens\",\n    \"type\": \"color_palette\",\n    \"url\": \"https://coolors.co/palette/dad7cd-a3b18a-588157-3a5a40-344e41\",\n    \"description\": \"Green palette\",\n    \"tags\": \"greens, nature, forest\",\n    \"image\": null\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/folders/{{folder_id}}/resources",
+                                    "host": ["{{base_url}}"],
+                                    "path": [
+                                        "folders",
+                                        "{{folder_id}}",
+                                        "resources"
+                                    ]
+                                }
+                            },
+                            "_postman_previewlanguage": "",
+                            "header": [],
+                            "cookie": [
+                                {
+                                    "expires": "Invalid Date",
+                                    "domain": "",
+                                    "path": ""
+                                }
+                            ],
+                            "body": ""
+                        },
+                        {
+                            "name": "image",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [],
+                                "body": {
+                                    "mode": "formdata",
+                                    "formdata": [],
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/folders/{{folder_id}}/resources",
+                                    "host": ["{{base_url}}"],
+                                    "path": [
+                                        "folders",
+                                        "{{folder_id}}",
+                                        "resources"
+                                    ]
+                                }
+                            },
+                            "_postman_previewlanguage": null,
+                            "header": null,
+                            "cookie": [],
+                            "body": null
+                        },
+                        {
+                            "name": "font",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"title\": \"Holwood One\",\n    \"type\": \"font\",\n    \"url\": \"https://fonts.google.com/share?selection.family=Holtwood+One+SC\",\n    \"description\": \"Font for titles\",\n    \"tags\": \"bold, titles, serif\",\n    \"image\": null\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/folders/{{folder_id}}/resources",
+                                    "host": ["{{base_url}}"],
+                                    "path": [
+                                        "folders",
+                                        "{{folder_id}}",
+                                        "resources"
+                                    ]
+                                }
+                            },
+                            "_postman_previewlanguage": null,
+                            "header": null,
+                            "cookie": [],
+                            "body": null
+                        },
+                        {
+                            "name": "icon",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"title\": \"Swatch\",\n    \"type\": \"icon\",\n    \"url\": \"https://api.iconify.design/heroicons:swatch.svg\",\n    \"description\": \"Icon for inputfield\",\n    \"tags\": \"form, design, heroicons\",\n    \"image\": null\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/folders/{{folder_id}}/resources",
+                                    "host": ["{{base_url}}"],
+                                    "path": [
+                                        "folders",
+                                        "{{folder_id}}",
+                                        "resources"
+                                    ]
+                                }
+                            },
+                            "_postman_previewlanguage": null,
+                            "header": null,
+                            "cookie": [],
+                            "body": null
+                        }
+                    ]
+                },
+                {
+                    "name": "All Resources",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/resources",
+                            "host": ["{{base_url}}"],
+                            "path": ["resources"],
+                            "query": [
+                                {
+                                    "key": "tagged",
+                                    "value": "true",
+                                    "type": "text",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "tagged",
+                                    "value": "false",
+                                    "type": "text",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "tag",
+                                    "value": "colors",
+                                    "type": "text",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "search",
+                                    "value": "greens",
+                                    "type": "text",
+                                    "disabled": true
+                                }
+                            ]
+                        },
+                        "description": "Returns all the resources that the user has uploaded.\n\n**Endpoint:** `GET /api/v1/folders`\n\n### On Success\n\nReturns `200 OK` with the folder data.\n\n``` json\n[\n    {\n        \"id\": 1,\n        \"title\": \"Web reference\",\n        \"type\": \"web\",\n        \"description\": \"Web for colors\",\n        \"url\": \"https://coolors.co/\",\n        \"image_path\": null,\n        \"color_data\": null,\n        \"created_at\": \"2026-03-19T11:30:34.000000Z\",\n        \"updated_at\": \"2026-03-19T11:30:34.000000Z\",\n        \"folder\": {\n            \"id\": 2,\n            \"parent_id\": null,\n            \"name\": \"Design\",\n            \"total_resources_count\": 2,\n            \"folders\": []\n        }\n    },\n    {\n        \"id\": 3,\n        \"title\": \"Greens\",\n        \"type\": \"color_palette\",\n        \"description\": \"Green palette\",\n        \"url\": \"https://coolors.co/palette/dad7cd-a3b18a-588157-3a5a40-344e41\",\n        \"image_path\": null,\n        \"color_data\": [\n            \"dad7cd\",\n            \"a3b18a\",\n            \"588157\",\n            \"3a5a40\",\n            \"344e41\"\n        ],\n        \"created_at\": \"2026-03-19T11:30:43.000000Z\",\n        \"updated_at\": \"2026-03-19T11:30:43.000000Z\",\n        \"folder\": {\n            \"id\": 15,\n            \"parent_id\": null,\n            \"name\": \"Design\",\n            \"total_resources_count\": 2,\n            \"folders\": []\n        }\n    }\n]\n\n ```"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Resource",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/resources/12",
+                            "host": ["{{base_url}}"],
+                            "path": ["resources", "12"]
+                        },
+                        "description": "Returns a specific resource and displays all of its information\n\n**Endpoint:** `GET /api/v1/resources/{id}`\n\n### On Success\n\nReturns `200 OK` with the folder data.\n\n``` json\n{\n    \"id\": 12,\n    \"title\": \"Greens\",\n    \"type\": \"color_palette\",\n    \"description\": \"Green palette\",\n    \"url\": \"https://coolors.co/palette/dad7cd-a3b18a-588157-3a5a40-344e41\",\n    \"image_path\": null,\n    \"color_data\": [\n        \"dad7cd\",\n        \"a3b18a\",\n        \"588157\",\n        \"3a5a40\",\n        \"344e41\"\n    ],\n    \"created_at\": \"2026-03-19T11:30:43.000000Z\",\n    \"updated_at\": \"2026-03-19T11:30:43.000000Z\",\n    \"folder\": {\n        \"id\": 15,\n        \"parent_id\": null,\n        \"name\": \"Design\",\n        \"total_resources_count\": 2,\n        \"folders\": []\n    },\n    \"tags\": [\n        {\n            \"id\": 16,\n            \"name\": \"greens\"\n        },\n        {\n            \"id\": 17,\n            \"name\": \"nature\"\n        },\n        {\n            \"id\": 18,\n            \"name\": \"forest\"\n        }\n    ]\n}\n\n ```"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Resource",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"title\": \"Name change\",\n    \"type\": \"web\",\n    \"url\": \"https://coolors.co/\",\n    \"description\": \"New description\",\n    \"tags\": \"colors\",\n    \"image\": null\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/resources/11",
+                            "host": ["{{base_url}}"],
+                            "path": ["resources", "11"]
+                        },
+                        "description": "Update the information of a resource.\n\n**Endpoint:** `PUT /api/v1/resource/{id}`\n\n### Request Body\n\n| Field | Type | Description |\n| --- | --- | --- |\n| `title` | string | The updated name of the resource |\n| `description` | string | The updated description of the resource |\n| `URL` | URL | The updated URL of the resource |\n| `tags` | string | The updated tags of the resource |\n\n### On Success\n\nReturns `200 OK` with the updated folder data.\n\n``` json\n{\n    \"id\": 2,\n    \"title\": \"Name change\",\n    \"type\": \"web\",\n    \"description\": \"New description\",\n    \"url\": \"https://coolors.co/\",\n    \"image_path\": null,\n    \"color_data\": null,\n    \"created_at\": \"2026-03-19T11:30:34.000000Z\",\n    \"updated_at\": \"2026-03-19T11:54:22.000000Z\",\n    \"tags\": [\n        {\n            \"id\": 14,\n            \"name\": \"colors\"\n        }\n    ],\n    \"folder\": {\n        \"id\": 15,\n        \"parent_id\": null,\n        \"name\": \"Design\",\n        \"total_resources_count\": 1,\n        \"folders\": []\n    }\n}\n\n ```"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Resource",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/resources/12",
+                            "host": ["{{base_url}}"],
+                            "path": ["resources", "12"]
+                        },
+                        "description": "Deletes the resource and all associated data.\n\n**Endpoint:** `DELETE /api/v1/resources/{id}`\n\n### On Success\n\nReturns `200 OK` with the confirmation message. the selected resource\n\n``` json\n{\n    \"message\": \"Resource deleted\"\n}\n\n ```"
+                    },
+                    "response": []
                 }
-              ]
-            },
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"title\": \"Web reference\",\n    \"type\": \"web\",\n    \"url\": \"https://coolors.co/\",\n    \"description\": \"Web for colors\",\n    \"tags\": \"colors, reference\",\n    \"image\": null\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
+            ],
+            "description": "Endpoints for managing the creation user's resources.\n\n##### All endpoints in this section **require a valid Bearer token** in the `Authorization` header.\n\nA user can view their resources, update their information, manage tags and delete the resources.\n\n### Resources allowed\n\n| Resource | Source | Info |\n| --- | --- | --- |\n| `Images` | Upload from URL or device | jpg, jpeg, png, webp, gif — max 10MB |\n| `Fonts` | Upload from URL | Use of [https://fonts.google.com/](https://fonts.google.com/) is recommended |\n| `Webs` | Upload from URL | No URL restriction |\n| `Color Palettes` | Upload from URL | It's required to use [https://coolors.co](https://coolors.co) |\n| `Icons` | Upload from URL | No URL restriction |\n\n### Note\n\nIn order to upload resources, the user must first create a folder.\n\n### color_data field\n\nThe `color_data` field is only populated for `color_palette` type resources. It contains an array of hex color codes automatically extracted from a Coolors.co URL. Example: `[\"dad7cd\", \"a3b18a\", \"588157\", \"3a5a40\", \"344e41\"]` For all other resource types, `color_data`will be `null`."
+        },
+        {
+            "name": "Tags",
+            "item": [
+                {
+                    "name": "Tags",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/tags",
+                            "host": ["{{base_url}}"],
+                            "path": ["tags"]
+                        },
+                        "description": "### List all tags\n\nReturns all tags belonging to the authenticated user. Useful for autocomplete when tagging resources.\n\n### On Success\n\nReturns `200 OK` with all the tags.\n\n``` json\n[\n  {\n    \"id\": 1,\n    \"name\": \"ocean\"\n  }\n]\n\n ```"
+                    },
+                    "response": []
                 }
-              }
-            },
-            "url": {
-              "raw": "{{base_url}}/folders/{{folder_id}}/resources",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "folders",
-                "{{folder_id}}",
-                "resources"
-              ]
+            ],
+            "description": "Endpoints for managing tags. Tags are created automatically when adding or updating resources and deleted when they become orphaned — meaning no resources are associated with them."
+        },
+        {
+            "name": "Admin",
+            "item": [
+                {
+                    "name": "See all users",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/admin/users",
+                            "host": ["{{base_url}}"],
+                            "path": ["admin", "users"]
+                        },
+                        "description": "### List all users\n\nReturns all registered users. Supports filtering by role.\n\n### On Success\n\nReturns `200 OK` with the lists of users.\n\n``` json\n[\n  {\n    \"id\": 1,\n    \"name\": \"TestUser\",\n    \"email\": \"usertest@nodefold.com\",\n    \"role\": \"user\"\n  }\n]\n\n ```"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "See Stats",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/admin/stats",
+                            "host": ["{{base_url}}"],
+                            "path": ["admin", "stats"]
+                        },
+                        "description": "### Platform stats\n\nReturns global platform statistics including total counts of users, resources, folders and tags.\n\n### On Success\n\nReturns `200 OK` all the stats.\n\n``` json\n{\n  \"total_users\": 25,\n  \"total_resources\": 142,\n  \"total_folders\": 38,\n  \"total_tags\": 15,\n  \"tags\": [\n    {\n      \"id\": 1,\n      \"name\": \"ocean\"\n    }\n  ]\n}\n\n ```"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete User",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/admin/users/1",
+                            "host": ["{{base_url}}"],
+                            "path": ["admin", "users", "1"]
+                        },
+                        "description": "### Delete a user\n\nPermanently deletes a user account and all associated data including folders, resources and tags.\n\n### On Success\n\nReturns `200 OK` with the message.\n\n``` json\n{\n  \"message\": \"User deleted successfully\"\n}\n\n ```"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Endpoints for platform administration. These endpoints are exclusively available to users with the `admin` role. Any authenticated user without the `admin` role will receive a `403 Forbidden` response.\n\n### Admin endpoints\n\n- `GET /api/v1/admin/users` — list all registered users, filterable by role.\n    \n- `DELETE /api/v1/admin/users/{id}` — permanently delete a user and all their data.\n    \n- `GET /api/v1/admin/stats` — view global platform statistics including total counts and tag listing.\n    \n\n### How to get admin access\n\nAdmin users are created via database seeder. Run `php artisan db:seed` to create the default admin account. All endpoints require authentication and admin role."
+        }
+    ],
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [""]
             }
-          },
-          "response": [
-            {
-              "name": "color_palette",
-              "originalRequest": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json",
-                    "type": "text"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n    \"title\": \"Greens\",\n    \"type\": \"color_palette\",\n    \"url\": \"https://coolors.co/palette/dad7cd-a3b18a-588157-3a5a40-344e41\",\n    \"description\": \"Green palette\",\n    \"tags\": \"greens, nature, forest\",\n    \"image\": null\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{base_url}}/folders/{{folder_id}}/resources",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "folders",
-                    "{{folder_id}}",
-                    "resources"
-                  ]
-                }
-              },
-              "_postman_previewlanguage": "",
-              "header": [],
-              "cookie": [
-                {
-                  "expires": "Invalid Date",
-                  "domain": "",
-                  "path": ""
-                }
-              ],
-              "body": ""
-            },
-            {
-              "name": "image",
-              "originalRequest": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "formdata",
-                  "formdata": [],
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{base_url}}/folders/{{folder_id}}/resources",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "folders",
-                    "{{folder_id}}",
-                    "resources"
-                  ]
-                }
-              },
-              "_postman_previewlanguage": null,
-              "header": null,
-              "cookie": [],
-              "body": null
-            },
-            {
-              "name": "font",
-              "originalRequest": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n    \"title\": \"Holwood One\",\n    \"type\": \"font\",\n    \"url\": \"https://fonts.google.com/share?selection.family=Holtwood+One+SC\",\n    \"description\": \"Font for titles\",\n    \"tags\": \"bold, titles, serif\",\n    \"image\": null\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{base_url}}/folders/{{folder_id}}/resources",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "folders",
-                    "{{folder_id}}",
-                    "resources"
-                  ]
-                }
-              },
-              "_postman_previewlanguage": null,
-              "header": null,
-              "cookie": [],
-              "body": null
-            },
-            {
-              "name": "icon",
-              "originalRequest": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n    \"title\": \"Swatch\",\n    \"type\": \"icon\",\n    \"url\": \"https://api.iconify.design/heroicons:swatch.svg\",\n    \"description\": \"Icon for inputfield\",\n    \"tags\": \"form, design, heroicons\",\n    \"image\": null\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{base_url}}/folders/{{folder_id}}/resources",
-                  "host": [
-                    "{{base_url}}"
-                  ],
-                  "path": [
-                    "folders",
-                    "{{folder_id}}",
-                    "resources"
-                  ]
-                }
-              },
-              "_postman_previewlanguage": null,
-              "header": null,
-              "cookie": [],
-              "body": null
+        },
+        {
+            "listen": "test",
+            "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [""]
             }
-          ]
-        },
-        {
-          "name": "All Resources",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/resources",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "resources"
-              ],
-              "query": [
-                {
-                  "key": "tagged",
-                  "value": "true",
-                  "type": "text",
-                  "disabled": true
-                },
-                {
-                  "key": "tagged",
-                  "value": "false",
-                  "type": "text",
-                  "disabled": true
-                },
-                {
-                  "key": "tag",
-                  "value": "colors",
-                  "type": "text",
-                  "disabled": true
-                },
-                {
-                  "key": "search",
-                  "value": "greens",
-                  "type": "text",
-                  "disabled": true
-                }
-              ]
-            },
-            "description": "Returns all the resources that the user has uploaded.\n\n**Endpoint:** `GET /api/v1/folders`\n\n### On Success\n\nReturns `200 OK` with the folder data.\n\n``` json\n[\n    {\n        \"id\": 1,\n        \"title\": \"Web reference\",\n        \"type\": \"web\",\n        \"description\": \"Web for colors\",\n        \"url\": \"https://coolors.co/\",\n        \"image_path\": null,\n        \"color_data\": null,\n        \"created_at\": \"2026-03-19T11:30:34.000000Z\",\n        \"updated_at\": \"2026-03-19T11:30:34.000000Z\",\n        \"folder\": {\n            \"id\": 2,\n            \"parent_id\": null,\n            \"name\": \"Design\",\n            \"total_resources_count\": 2,\n            \"folders\": []\n        }\n    },\n    {\n        \"id\": 3,\n        \"title\": \"Greens\",\n        \"type\": \"color_palette\",\n        \"description\": \"Green palette\",\n        \"url\": \"https://coolors.co/palette/dad7cd-a3b18a-588157-3a5a40-344e41\",\n        \"image_path\": null,\n        \"color_data\": [\n            \"dad7cd\",\n            \"a3b18a\",\n            \"588157\",\n            \"3a5a40\",\n            \"344e41\"\n        ],\n        \"created_at\": \"2026-03-19T11:30:43.000000Z\",\n        \"updated_at\": \"2026-03-19T11:30:43.000000Z\",\n        \"folder\": {\n            \"id\": 15,\n            \"parent_id\": null,\n            \"name\": \"Design\",\n            \"total_resources_count\": 2,\n            \"folders\": []\n        }\n    }\n]\n\n ```"
-          },
-          "response": []
-        },
-        {
-          "name": "Resource",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/resources/12",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "resources",
-                "12"
-              ]
-            },
-            "description": "Returns a specific resource and displays all of its information\n\n**Endpoint:** `GET /api/v1/resources/{id}`\n\n### On Success\n\nReturns `200 OK` with the folder data.\n\n``` json\n{\n    \"id\": 12,\n    \"title\": \"Greens\",\n    \"type\": \"color_palette\",\n    \"description\": \"Green palette\",\n    \"url\": \"https://coolors.co/palette/dad7cd-a3b18a-588157-3a5a40-344e41\",\n    \"image_path\": null,\n    \"color_data\": [\n        \"dad7cd\",\n        \"a3b18a\",\n        \"588157\",\n        \"3a5a40\",\n        \"344e41\"\n    ],\n    \"created_at\": \"2026-03-19T11:30:43.000000Z\",\n    \"updated_at\": \"2026-03-19T11:30:43.000000Z\",\n    \"folder\": {\n        \"id\": 15,\n        \"parent_id\": null,\n        \"name\": \"Design\",\n        \"total_resources_count\": 2,\n        \"folders\": []\n    },\n    \"tags\": [\n        {\n            \"id\": 16,\n            \"name\": \"greens\"\n        },\n        {\n            \"id\": 17,\n            \"name\": \"nature\"\n        },\n        {\n            \"id\": 18,\n            \"name\": \"forest\"\n        }\n    ]\n}\n\n ```"
-          },
-          "response": []
-        },
-        {
-          "name": "Update Resource",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "PUT",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"title\": \"Name change\",\n    \"type\": \"web\",\n    \"url\": \"https://coolors.co/\",\n    \"description\": \"New description\",\n    \"tags\": \"colors\",\n    \"image\": null\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url}}/resources/11",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "resources",
-                "11"
-              ]
-            },
-            "description": "Update the information of a resource.\n\n**Endpoint:** `PUT /api/v1/resource/{id}`\n\n### Request Body\n\n| Field | Type | Description |\n| --- | --- | --- |\n| `title` | string | The updated name of the resource |\n| `description` | string | The updated description of the resource |\n| `URL` | URL | The updated URL of the resource |\n| `tags` | string | The updated tags of the resource |\n\n### On Success\n\nReturns `200 OK` with the updated folder data.\n\n``` json\n{\n    \"id\": 2,\n    \"title\": \"Name change\",\n    \"type\": \"web\",\n    \"description\": \"New description\",\n    \"url\": \"https://coolors.co/\",\n    \"image_path\": null,\n    \"color_data\": null,\n    \"created_at\": \"2026-03-19T11:30:34.000000Z\",\n    \"updated_at\": \"2026-03-19T11:54:22.000000Z\",\n    \"tags\": [\n        {\n            \"id\": 14,\n            \"name\": \"colors\"\n        }\n    ],\n    \"folder\": {\n        \"id\": 15,\n        \"parent_id\": null,\n        \"name\": \"Design\",\n        \"total_resources_count\": 1,\n        \"folders\": []\n    }\n}\n\n ```"
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Resource",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/resources/12",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "resources",
-                "12"
-              ]
-            },
-            "description": "Deletes the resource and all associated data.\n\n**Endpoint:** `DELETE /api/v1/resources/{id}`\n\n### On Success\n\nReturns `200 OK` with the confirmation message. the selected resource\n\n``` json\n{\n    \"message\": \"Resource deleted\"\n}\n\n ```"
-          },
-          "response": []
         }
-      ],
-      "description": "Endpoints for managing the creation user's resources.\n\n##### All endpoints in this section **require a valid Bearer token** in the `Authorization` header.\n\nA user can view their resources, update their information, manage tags and delete the resources.\n\n### Resources allowed\n\n| Resource | Source | Info |\n| --- | --- | --- |\n| `Images` | Upload from URL or device | jpg, jpeg, png, webp, gif — max 10MB |\n| `Fonts` | Upload from URL | Use of [https://fonts.google.com/](https://fonts.google.com/) is recommended |\n| `Webs` | Upload from URL | No URL restriction |\n| `Color Palettes` | Upload from URL | It's required to use [https://coolors.co](https://coolors.co) |\n| `Icons` | Upload from URL | No URL restriction |\n\n### Note\n\nIn order to upload resources, the user must first create a folder.\n\n### color_data field\n\nThe `color_data` field is only populated for `color_palette` type resources. It contains an array of hex color codes automatically extracted from a Coolors.co URL. Example: `[\"dad7cd\", \"a3b18a\", \"588157\", \"3a5a40\", \"344e41\"]` For all other resource types, `color_data`will be `null`."
-    },
-    {
-      "name": "Tags",
-      "item": [
-        {
-          "name": "Tags",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/tags",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "tags"
-              ]
-            },
-            "description": "### List all tags\n\nReturns all tags belonging to the authenticated user. Useful for autocomplete when tagging resources.\n\n### On Success\n\nReturns `200 OK` with all the tags.\n\n``` json\n[\n  {\n    \"id\": 1,\n    \"name\": \"ocean\"\n  }\n]\n\n ```"
-          },
-          "response": []
-        }
-      ],
-      "description": "Endpoints for managing tags. Tags are created automatically when adding or updating resources and deleted when they become orphaned — meaning no resources are associated with them."
-    },
-    {
-      "name": "Admin",
-      "item": [
-        {
-          "name": "See all users",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/admin/users",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "admin",
-                "users"
-              ]
-            },
-            "description": "### List all users\n\nReturns all registered users. Supports filtering by role.\n\n### On Success\n\nReturns `200 OK` with the lists of users.\n\n``` json\n[\n  {\n    \"id\": 1,\n    \"name\": \"TestUser\",\n    \"email\": \"usertest@nodefold.com\",\n    \"role\": \"user\"\n  }\n]\n\n ```"
-          },
-          "response": []
-        },
-        {
-          "name": "See Stats",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/admin/stats",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "admin",
-                "stats"
-              ]
-            },
-            "description": "### Platform stats\n\nReturns global platform statistics including total counts of users, resources, folders and tags.\n\n### On Success\n\nReturns `200 OK` all the stats.\n\n``` json\n{\n  \"total_users\": 25,\n  \"total_resources\": 142,\n  \"total_folders\": 38,\n  \"total_tags\": 15,\n  \"tags\": [\n    {\n      \"id\": 1,\n      \"name\": \"ocean\"\n    }\n  ]\n}\n\n ```"
-          },
-          "response": []
-        },
-        {
-          "name": "Delete User",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/admin/users/1",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "admin",
-                "users",
-                "1"
-              ]
-            },
-            "description": "### Delete a user\n\nPermanently deletes a user account and all associated data including folders, resources and tags.\n\n### On Success\n\nReturns `200 OK` with the message.\n\n``` json\n{\n  \"message\": \"User deleted successfully\"\n}\n\n ```"
-          },
-          "response": []
-        }
-      ],
-      "description": "Endpoints for platform administration. These endpoints are exclusively available to users with the `admin` role. Any authenticated user without the `admin` role will receive a `403 Forbidden` response.\n\n### Admin endpoints\n\n- `GET /api/v1/admin/users` — list all registered users, filterable by role.\n    \n- `DELETE /api/v1/admin/users/{id}` — permanently delete a user and all their data.\n    \n- `GET /api/v1/admin/stats` — view global platform statistics including total counts and tag listing.\n    \n\n### How to get admin access\n\nAdmin users are created via database seeder. Run `php artisan db:seed` to create the default admin account. All endpoints require authentication and admin role."
-    }
-  ],
-  "event": [
-    {
-      "listen": "prerequest",
-      "script": {
-        "type": "text/javascript",
-        "packages": {},
-        "requests": {},
-        "exec": [
-          ""
-        ]
-      }
-    },
-    {
-      "listen": "test",
-      "script": {
-        "type": "text/javascript",
-        "packages": {},
-        "requests": {},
-        "exec": [
-          ""
-        ]
-      }
-    }
-  ]
+    ]
 }

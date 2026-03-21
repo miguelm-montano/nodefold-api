@@ -14,11 +14,13 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
-            'name' => 'Admin',
-            'email' => 'admin@nodefold.com',
-            'password' => Hash::make('Admin1234'),
-            'role' => 'admin',
-        ]);
+        User::firstOrCreate(
+            ['email' => 'admin@nodefold.com'],
+            [
+                'name' => 'Admin',
+                'password' => Hash::make('Admin1234'),
+                'role' => 'admin',
+            ]
+        );
     }
 }

@@ -15,9 +15,9 @@ Route::prefix('v1')->group(function () {
     Route::middleware('auth:api')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
     
-        Route::get('/user/me', [UserController::class, 'me']);
-        Route::put('/user/me', [UserController::class, 'update']);
-        Route::delete('/user/me', [UserController::class, 'destroy']);
+        Route::get('/users/me', [UserController::class, 'me']);
+        Route::put('/users/me', [UserController::class, 'update']);
+        Route::delete('/users/me', [UserController::class, 'destroy']);
 
         Route::post('/folders', [FolderController::class, 'store']);
         Route::get('/folders', [FolderController::class, 'index']);

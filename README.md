@@ -2,6 +2,14 @@
   <img src="public/images/Nodefold-banner.png" alt="Nodefold-banner" title="Nodefold-banner">
 </p>
 
+<p align="center">
+  <a href="https://nodefold-api.onrender.com/docs"><strong>📄 Live Documentation</strong></a> - Cold start may take ~45s on first request
+</p>
+
+<p align="center">
+  <sub></sub>
+</p>
+
 ## 📚 Table of Contents
 
 - [About](#about)
@@ -147,8 +155,6 @@ docker run -p 8000:10000 --env-file .env nodefold-api
 
 **Production deployment (Render)**
 The API is deployed on Render using Docker
-
-**Live URL:** https://nodefold-api.onrender.com
 
 **Live Docs:** https://nodefold-api.onrender.com/docs
 

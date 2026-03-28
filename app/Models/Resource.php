@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Resource extends Model {
 
@@ -24,7 +25,16 @@ class Resource extends Model {
         'color_data' => 'array',
     ];
 
+    protected $appends = ['image_url'];
+
     protected $hidden = ['user_id', 'folder_id'];
+
+    public function getImageUrlAttribute(): ?string
+    {
+        return $this->image_path
+            ? Storage::disk('public')->url($this->image_path)
+            : null;
+    }
 
     public function user() {
         

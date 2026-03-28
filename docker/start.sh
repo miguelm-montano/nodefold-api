@@ -22,6 +22,7 @@ EOF
 php artisan migrate --force
 php artisan passport:install --force
 php artisan db:seed --class=AdminSeeder --force
+php artisan storage:link --force 
 chown -R www-data:www-data /var/www
 su -s /bin/bash www-data -c "php /var/www/artisan scribe:generate"
 php-fpm -D

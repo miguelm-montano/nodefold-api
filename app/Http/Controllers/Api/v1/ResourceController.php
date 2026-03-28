@@ -51,7 +51,7 @@ class ResourceController extends Controller
     */
     public function index(Request $request) {
     
-        $query = $request->user()->resources()->with(['folder']);
+        $query = $request->user()->resources()->with(['folder', 'tags']);
 
         $this->applyFilters($query, $request);
         
@@ -308,7 +308,11 @@ class ResourceController extends Controller
         }
 
         if ($request->query('search')) {
-            $query->where('title', 'like', '%' . $request->query('search') . '%');
+            $term = $request->query('search');
+            $query->where(function($q) use ($term) {
+                $q->where('title', 'like', "%{$term}%")
+                  ->orWhereHas('tags', fn($t) => $t->where('name', 'like', "%{$term}%"));
+            });
         }
 
         if ($request->query('tag')) {

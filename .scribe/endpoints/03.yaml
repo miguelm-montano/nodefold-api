@@ -146,6 +146,7 @@ endpoints:
             "description": "Natural photography",
             "url": "https://example.com/image.jpg",
             "image_path": null,
+            "image_url": null,
             "color_data": null,
             "tags": [{"id": 1, "name": "ocean"}],
             "folder": {"id": 1, "name": "Design"}
@@ -163,6 +164,7 @@ endpoints:
             "description": "Green tones for the home page",
             "url": "https://coolors.co/palette/dad7cd-a3b18a-588157-3a5a40-344e41",
             "image_path": null,
+            "image_url": null,
             "color_data": ["dad7cd", "a3b18a", "588157", "3a5a40", "344e41"],
             "tags": [{"id": 1, "name": "greens"}],
             "folder": {"id": 1, "name": "Design"}
@@ -244,7 +246,7 @@ endpoints:
       search:
         custom: []
         name: search
-        description: 'Filter resources by title.'
+        description: 'Filter resources by title or tag name.'
         required: false
         example: Chair
         type: string
@@ -293,6 +295,7 @@ endpoints:
             "description": "Natural photography",
             "url": "https://example.com/image.jpg",
             "image_path": null,
+            "image_url": null,
             "color_data": null,
             "tags": [{"id": 1, "name": "ocean"}],
             "folder": {"id": 1, "name": "Design"}
@@ -376,6 +379,7 @@ endpoints:
             "description": "Natural photography",
             "url": "https://example.com/image.jpg",
             "image_path": null,
+            "image_url": null,
             "color_data": null,
             "tags": [{"id": 1, "name": "ocean"}],
             "folder": {"id": 1, "name": "Design"}
@@ -528,6 +532,7 @@ endpoints:
             "description": "Updated description",
             "url": "https://example.com/image.jpg",
             "image_path": null,
+            "image_url": null,
             "color_data": null,
             "tags": [{"id": 1, "name": "ocean"}],
             "folder": {"id": 1, "name": "Design"}

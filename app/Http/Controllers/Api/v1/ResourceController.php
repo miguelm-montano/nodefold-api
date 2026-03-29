@@ -30,7 +30,7 @@ class ResourceController extends Controller
     * Returns all resources belonging to the authenticated user.
     * Supports filtering via query parameters.
     *
-    * @queryParam search string Filter resources by title. Example: Chair
+    * @queryParam search string Filter resources by title or tag name. Example: Chair
     * @queryParam tagged string Filter by tag status. Accepted values: true, false. Example: true
     * @queryParam tag string Filter by tag name. Example: modern
     *
@@ -41,6 +41,7 @@ class ResourceController extends Controller
     *   "description": "Natural photography",
     *   "url": "https://example.com/image.jpg",
     *   "image_path": null,
+    *   "image_url": null,
     *   "color_data": null,
     *   "tags": [{"id": 1, "name": "ocean"}],
     *   "folder": {"id": 1, "name": "Design"}
@@ -73,6 +74,7 @@ class ResourceController extends Controller
     *   "description": "Natural photography",
     *   "url": "https://example.com/image.jpg",
     *   "image_path": null,
+    *   "image_url": null,
     *   "color_data": null,
     *   "tags": [{"id": 1, "name": "ocean"}],
     *   "folder": {"id": 1, "name": "Design"}
@@ -117,6 +119,7 @@ class ResourceController extends Controller
     *   "description": "Natural photography",
     *   "url": "https://example.com/image.jpg",
     *   "image_path": null,
+    *   "image_url": null,
     *   "color_data": null,
     *   "tags": [{"id": 1, "name": "ocean"}],
     *   "folder": {"id": 1, "name": "Design"}
@@ -128,6 +131,7 @@ class ResourceController extends Controller
     *   "description": "Green tones for the home page",
     *   "url": "https://coolors.co/palette/dad7cd-a3b18a-588157-3a5a40-344e41",
     *   "image_path": null,
+    *   "image_url": null,
     *   "color_data": ["dad7cd", "a3b18a", "588157", "3a5a40", "344e41"],
     *   "tags": [{"id": 1, "name": "greens"}],
     *   "folder": {"id": 1, "name": "Design"}
@@ -182,6 +186,7 @@ class ResourceController extends Controller
     *   "description": "Updated description",
     *   "url": "https://example.com/image.jpg",
     *   "image_path": null,
+    *   "image_url": null,
     *   "color_data": null,
     *   "tags": [{"id": 1, "name": "ocean"}],
     *   "folder": {"id": 1, "name": "Design"}

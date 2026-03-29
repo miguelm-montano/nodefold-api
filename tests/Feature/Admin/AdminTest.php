@@ -104,4 +104,21 @@ class AdminTest extends TestCase
 
         $response->assertStatus(403);
     }
+
+    public function test_admin_can_filter_users_by_role(): void {
+        
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        Passport::actingAs($admin);
+
+        User::factory()->create(['role' => 'user']);
+
+        User::factory()->create(['role' => 'user']);
+
+        $response = $this->getJson('/api/v1/admin/users?role=user');
+
+        $response->assertStatus(200);
+        
+        $response->assertJsonCount(2);
+    }
 }

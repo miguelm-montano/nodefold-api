@@ -16,7 +16,7 @@ RESTful API for managing design assets organized in folders. All protected endpo
 - `admin` — has additional access to user management and platform statistics via `/api/v1/admin/*` endpoints.
 
 <aside>
-    <strong>Base URL</strong>: <code>http://localhost</code>
+    <strong>Base URL</strong>: <code>http://localhost:8000</code>
 </aside>
 
 

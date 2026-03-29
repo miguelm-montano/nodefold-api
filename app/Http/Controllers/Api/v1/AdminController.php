@@ -46,9 +46,14 @@ class AdminController extends Controller
     *   "message": "Unauthorized"
     * }
     */
-    public function index() {
-        $users = User::all();
-        return response()->json($users);
+    public function index(Request $request) {
+        $query = User::query();
+    
+        if ($request->query('role')) {
+            $query->where('role', $request->query('role'));
+        }
+    
+    return response()->json($query->get());
     }
 
     /**

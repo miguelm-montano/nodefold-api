@@ -75,6 +75,8 @@ endpoints:
             "name": "TestUser",
             "email": "usertest@nodefold.com",
             "role": "user"
+            "folders_count": 5,
+            "resources_count": 12
           }]
         headers: []
         description: ''
@@ -247,7 +249,7 @@ endpoints:
             "total_resources": 142,
             "total_folders": 38,
             "total_tags": 15,
-            "tags": [{"id": 1, "name": "ocean"}]
+            "tags": [{"id": 1, "name": "ocean", "resources_count": 8}]
           }
         headers: []
         description: ''

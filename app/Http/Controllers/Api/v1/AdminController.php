@@ -38,6 +38,8 @@ class AdminController extends Controller
     *   "name": "TestUser",
     *   "email": "usertest@nodefold.com",
     *   "role": "user"
+    *   "folders_count": 5,
+    *   "resources_count": 12
     * }]
     * @response 401 {
     *   "message": "Unauthenticated"
@@ -47,13 +49,13 @@ class AdminController extends Controller
     * }
     */
     public function index(Request $request) {
-        $query = User::query();
-    
+        $query = User::withCount(['folders', 'resources']);
+
         if ($request->query('role')) {
             $query->where('role', $request->query('role'));
         }
-    
-    return response()->json($query->get());
+
+        return response()->json($query->get());
     }
 
     /**
@@ -94,7 +96,7 @@ class AdminController extends Controller
     *   "total_resources": 142,
     *   "total_folders": 38,
     *   "total_tags": 15,
-    *   "tags": [{"id": 1, "name": "ocean"}]
+    *   "tags": [{"id": 1, "name": "ocean", "resources_count": 8}]
     * }
     * @response 401 {
     *   "message": "Unauthenticated"
@@ -109,7 +111,7 @@ class AdminController extends Controller
             'total_resources' => Resource::count(),
             'total_folders' => Folder::count(),
             'total_tags' => Tag::count(),
-            'tags' => Tag::all()
+            'tags' => Tag::withCount('resources')->orderByDesc('resources_count')->get()
         ]);
     }
 }

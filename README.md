@@ -57,6 +57,12 @@ All endpoints are prefixed with /api/v1/
 - MySQL or PostgreSQL
 - Laravel Passport
 
+⚠️ Make sure you have created the database manually before running migrations. Laravel does not create the database automatically.
+
+```sql
+CREATE DATABASE nodefold_api;
+```
+
 **Clone the repository**
 
 ```
@@ -79,11 +85,12 @@ php artisan key:generate
 
 Update your _.env_ with your database credentials (see [Environment Variables](#-environment-variables))
 
-**Run migrations and install Passport**
+**Run migrations and configure Passport**
 
 ```
 php artisan migrate
-php artisan passport:install
+php artisan passport:keys
+php artisan passport:client --personal
 ```
 
 **Create storage symlink**

@@ -32,12 +32,12 @@ class Folder extends Model
     }
 
     public function getTotalResourcesCountAttribute(): int {
-    
+
         if ($this->parent_id !== null) {
-            return $this->resources()->count();
+            return $this->resources->count();
         }
-    
-        return $this->resources()->count() 
-            + $this->folders->sum(fn($sub) => $sub->resources()->count());
+
+        return $this->resources->count()
+            + $this->folders->sum(fn($sub) => $sub->resources->count());
     }
 }

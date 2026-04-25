@@ -45,4 +45,18 @@ return [
 
     'connection' => env('PASSPORT_CONNECTION'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Token Expiration
+    |--------------------------------------------------------------------------
+    |
+    | Here you may define how long access and refresh tokens remain valid.
+    | The values are Carbon interval methods (minutes, hours, days, etc.).
+    |
+    */
+
+    'tokens_expire_in' => DateInterval::createFromDateString('1 hour'),
+
+    'refresh_tokens_expire_in' => DateInterval::createFromDateString('1 hour'),
+
 ];

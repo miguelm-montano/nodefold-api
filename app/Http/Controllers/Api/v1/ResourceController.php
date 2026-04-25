@@ -6,8 +6,9 @@ use App\Models\Resource;
 use App\Models\Folder;
 use App\Models\Tag;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreResourceRequest;
+use App\Http\Requests\UpdateResourceRequest;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 /**
  * @group Resources
@@ -158,10 +159,10 @@ class ResourceController extends Controller
     *   }
     * }
     */
-    public function store(Request $request) {
+    public function store(StoreResourceRequest $request) {
 
-        $validated = $this->validateResource($request);
-        
+        $validated = $request->validated();
+
         $folder = $this->findUserFolder($validated['folder_id'], $request->user()->id);
 
         $resource = $request->user()->resources()->create([
@@ -208,13 +209,13 @@ class ResourceController extends Controller
     *   "message": "Resource not found"
     * } 
     */
-    public function update(Request $request, $id) {
+    public function update(UpdateResourceRequest $request, $id) {
 
         $resource = Resource::where('id', $id)
             ->where('user_id', $request->user()->id)
             ->firstOrFail();
 
-        $validated = $this->validateResource($request);
+        $validated = $request->validated();
 
         $tags = $validated['tags'] ?? null;
         unset($validated['image'], $validated['tags']);
@@ -289,31 +290,6 @@ class ResourceController extends Controller
         }
 
         return null;
-    }
-
-    private function validateResource(Request $request): array {
-
-        return $request->validate([
-            'title' => 'required|string|max:255',
-            'type' => 'required|in:font,image,color_palette,icon,web',
-            'folder_id' => 'required|integer|exists:folders,id',
-            'description' => 'nullable|string|max:400',
-            'url' => [
-                Rule::requiredIf(fn() => in_array($request->type, ['font', 'web', 'icon', 'color_palette'])),
-                'nullable',
-                'url',
-                'max:2048',
-                'regex:/^https?:\/\//i',
-            ],
-            'tags' => ['nullable', 'string', 'regex:/^(\s*[\w-]{1,30}\s*)(,\s*[\w-]{1,30}\s*)*$/u'],
-            'image' => [
-                'nullable',
-                'image',
-                'mimetypes:image/jpeg,image/png,image/webp,image/gif',
-                'max:10240',
-                'dimensions:max_width=8000,max_height=8000',
-            ],
-        ]);
     }
 
     private function applyFilters($query, Request $request): void {

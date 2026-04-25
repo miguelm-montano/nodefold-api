@@ -25,7 +25,7 @@ Route::prefix('v1')->group(function () {
         Route::put('/folders/{id}', [FolderController::class, 'update']);
         Route::delete('/folders/{id}', [FolderController::class, 'destroy']);
 
-        Route::post('/folders/{id}/resources', [ResourceController::class, 'store']);
+        Route::post('/resources', [ResourceController::class, 'store']);
 
         Route::get('/resources', [ResourceController::class, 'index']);
         Route::get('/resources/{id}', [ResourceController::class, 'show']);

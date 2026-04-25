@@ -53,11 +53,17 @@ class ResourceController extends Controller
     public function index(Request $request) {
     
         $query = $request->user()->resources()->with(['folder', 'tags']);
-
+ 
         $this->applyFilters($query, $request);
         
-        return response()->json($query->get());
-
+        $resources = $query->get();
+        
+        $resources->each(function($resource) {
+            $resource->folder->makeHidden(['resources', 'folders']);
+        });
+        
+        return response()->json($resources);
+ 
     }
 
     /**
@@ -103,10 +109,9 @@ class ResourceController extends Controller
     *
     * When testing from this interface without uploading an image, disable the Content-Type header to avoid multipart issues.
     *
-    * @urlParam id integer required The ID of the destination folder. Example: 1
-    *
     * @bodyParam title string required The title of the resource. Example: Green Tones
     * @bodyParam type string required The type of resource.<br> Allowed: font, image, color_palette, icon, web. Example: color_palette
+    * @bodyParam folder_id integer required The ID of the destination folder. Example: 1
     * @bodyParam description string optional A short description. Max 400 characters. Example: Green tones for the home page
     * @bodyParam url string optional URL required for font, web, icon and color_palette types. Example: https://coolors.co/palette/dad7cd-a3b18a-588157-3a5a40-344e41
     * @bodyParam tags string optional Comma separated list of tags. Example: greens, forest
@@ -149,10 +154,11 @@ class ResourceController extends Controller
     *   }
     * }
     */
-    public function store(Request $request, $id) {
+    public function store(Request $request) {
 
-        $folder = $this->findUserFolder($id, $request->user()->id);
         $validated = $this->validateResource($request);
+        
+        $folder = $this->findUserFolder($validated['folder_id'], $request->user()->id);
 
         $resource = $request->user()->resources()->create([
             ...$validated,
@@ -286,6 +292,7 @@ class ResourceController extends Controller
         return $request->validate([
             'title' => 'required|string|max:255',
             'type' => 'required|in:font,image,color_palette,icon,web',
+            'folder_id' => 'required|integer|exists:folders,id',
             'description' => 'nullable|string|max:400',
             'url' => [
                 Rule::requiredIf(fn() => in_array($request->type, ['font', 'web', 'icon', 'color_palette'])),

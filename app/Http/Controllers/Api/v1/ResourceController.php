@@ -325,6 +325,10 @@ class ResourceController extends Controller
                 $q->where('name', $request->query('tag'));
             });
         }
+
+        if ($request->query('type')) {
+            $query->where('type', $request->query('type'));
+        }
     }
 }
 

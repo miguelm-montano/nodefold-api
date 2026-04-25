@@ -120,4 +120,119 @@ class ResourceCreateTest extends TestCase
         $response->assertStatus(201)
             ->assertJsonFragment(['title' => 'External Image']);
     }
+
+    public function test_url_with_javascript_scheme_is_rejected(): void {
+
+        $user = User::factory()->create();
+        Passport::actingAs($user);
+        $folder = Folder::factory()->create(['user_id' => $user->id]);
+
+        $response = $this->postJson('/api/v1/folders/' . $folder->id . '/resources', [
+            'url' => 'javascript:alert(1)',
+            'type' => 'web',
+            'title' => 'Malicious',
+        ]);
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['url']);
+    }
+
+    public function test_url_with_file_scheme_is_rejected(): void {
+
+        $user = User::factory()->create();
+        Passport::actingAs($user);
+        $folder = Folder::factory()->create(['user_id' => $user->id]);
+
+        $response = $this->postJson('/api/v1/folders/' . $folder->id . '/resources', [
+            'url' => 'file:///etc/passwd',
+            'type' => 'web',
+            'title' => 'Malicious',
+        ]);
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['url']);
+    }
+
+    public function test_url_exceeding_max_length_is_rejected(): void {
+
+        $user = User::factory()->create();
+        Passport::actingAs($user);
+        $folder = Folder::factory()->create(['user_id' => $user->id]);
+
+        $response = $this->postJson('/api/v1/folders/' . $folder->id . '/resources', [
+            'url' => 'https://example.com/' . str_repeat('a', 2048),
+            'type' => 'web',
+            'title' => 'Long URL',
+        ]);
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['url']);
+    }
+
+    public function test_image_upload_with_php_file_disguised_as_jpg_is_rejected(): void {
+
+        $user = User::factory()->create();
+        Passport::actingAs($user);
+        $folder = Folder::factory()->create(['user_id' => $user->id]);
+
+        $file = UploadedFile::fake()->createWithContent('shell.jpg', '<?php system($_GET["cmd"]); ?>');
+
+        $response = $this->postJson('/api/v1/folders/' . $folder->id . '/resources', [
+            'image' => $file,
+            'type' => 'image',
+            'title' => 'Shell',
+        ]);
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['image']);
+    }
+
+    public function test_tag_exceeding_30_chars_is_rejected(): void {
+
+        $user = User::factory()->create();
+        Passport::actingAs($user);
+        $folder = Folder::factory()->create(['user_id' => $user->id]);
+
+        $response = $this->postJson('/api/v1/folders/' . $folder->id . '/resources', [
+            'url' => 'https://example.com/image.jpg',
+            'type' => 'image',
+            'title' => 'Tagged Resource',
+            'tags' => str_repeat('a', 31),
+        ]);
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['tags']);
+    }
+
+    public function test_multiple_valid_tags_are_accepted(): void {
+
+        $user = User::factory()->create();
+        Passport::actingAs($user);
+        $folder = Folder::factory()->create(['user_id' => $user->id]);
+
+        $response = $this->postJson('/api/v1/folders/' . $folder->id . '/resources', [
+            'url' => 'https://example.com/image.jpg',
+            'type' => 'image',
+            'title' => 'Tagged Resource',
+            'tags' => 'nature, ocean, blue',
+        ]);
+
+        $response->assertStatus(201);
+    }
+
+    public function test_tags_with_unicode_characters_are_accepted(): void {
+
+        $user = User::factory()->create();
+        Passport::actingAs($user);
+        $folder = Folder::factory()->create(['user_id' => $user->id]);
+
+        $response = $this->postJson('/api/v1/folders/' . $folder->id . '/resources', [
+            'url' => 'https://example.com/image.jpg',
+            'type' => 'image',
+            'title' => 'Tagged Resource',
+            'tags' => 'diseño, ilustración',
+        ]);
+
+        $response->assertStatus(201);
+    }
 }

@@ -61,8 +61,12 @@ class ResourceController extends Controller
         $resources->each(function($resource) {
             $resource->folder->makeHidden(['resources', 'folders']);
         });
-        
-        return response()->json($resources);
+
+        if ($resources->isEmpty()) {
+            return response()->json(['data' => [], 'message' => 'No resources saved yet']);
+        }
+
+        return response()->json(['data' => $resources]);
  
     }
 
@@ -288,7 +292,7 @@ class ResourceController extends Controller
     }
 
     private function validateResource(Request $request): array {
-    
+
         return $request->validate([
             'title' => 'required|string|max:255',
             'type' => 'required|in:font,image,color_palette,icon,web',
@@ -297,15 +301,18 @@ class ResourceController extends Controller
             'url' => [
                 Rule::requiredIf(fn() => in_array($request->type, ['font', 'web', 'icon', 'color_palette'])),
                 'nullable',
-                'string',
-                'max:500',
-                Rule::when(
-                    $request->type === 'image' && $request->url,
-                    ['regex:/\.(jpg|jpeg|png|webp|gif)(\?.*)?$/i']
-                ),
+                'url',
+                'max:2048',
+                'regex:/^https?:\/\//i',
             ],
-            'tags' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp,gif|max:10240'
+            'tags' => ['nullable', 'string', 'regex:/^(\s*[\w-]{1,30}\s*)(,\s*[\w-]{1,30}\s*)*$/u'],
+            'image' => [
+                'nullable',
+                'image',
+                'mimetypes:image/jpeg,image/png,image/webp,image/gif',
+                'max:10240',
+                'dimensions:max_width=8000,max_height=8000',
+            ],
         ]);
     }
 
